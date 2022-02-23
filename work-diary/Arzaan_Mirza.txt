@@ -2,4 +2,7 @@ Work Diary:
 
 Week 1:
 
-- The team discussed what the 
+- The team discussed and decided on the general technologies that we are going to do after going through the strengths of each team member
+- and what they are comfortable with in respects to the frontend and backend. We decided a general plan on when we should complete things so that
+- we have time at the end of the project to improve existing functionality. We discussed the proposal and how much we should plan to write and what each team 
+- member can specifically focus on. 
