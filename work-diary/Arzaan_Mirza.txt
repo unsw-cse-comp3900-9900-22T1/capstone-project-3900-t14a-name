@@ -2,7 +2,7 @@ Work Diary:
 
 Week 1:
 
-- The team discussed and decided on the general technologies that we are going to do after going through the strengths of each team member
-- and what they are comfortable with in respects to the frontend and backend. We decided a general plan on when we should complete things so that
-- we have time at the end of the project to improve existing functionality. We discussed the proposal and how much we should plan to write and what each team 
-- member can specifically focus on. 
+The team discussed and decided on the general technologies that we are going to do after going through the strengths of each team member.
+and what they are comfortable with in respects to the frontend and backend. We decided a general plan on when we should complete things so that
+we have time at the end of the project to improve existing functionality. We discussed the proposal and how much we should plan to write and what each team 
+member can specifically focus on. We started drawing out a plan on how our backend & frontend will connect with each other and what sort of pages will we need. We finalised technologies that we are going after long discussions. It took the team some researching and time to finalise the database component of the project, however we reached a conclusion to trial DynamoDB as our database and see how we go with it. 
