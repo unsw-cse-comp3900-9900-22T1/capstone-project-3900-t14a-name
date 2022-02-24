@@ -8,3 +8,8 @@ we have time at the end of the project to improve existing functionality. We dis
 member can specifically focus on. We started drawing out a plan on how our backend & frontend will connect with each other and what sort of pages will we need.
 We finalised technologies that we are going after long discussions. It took the team some researching and time to finalise the database component of the project,
 however we reached a conclusion to trial DynamoDB as our database and see how we go with it. 
+
+
+Week 2:
+
+I started creating user stories on the backlog. I have assigned the tickets to group members and we have almost finalised what each member will be concentrating upon in the first sprint. 
