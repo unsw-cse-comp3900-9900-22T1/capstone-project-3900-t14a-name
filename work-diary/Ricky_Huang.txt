@@ -1,1 +1,13 @@
+Work Diary
 
+Week 1
+------
+
+Our team has decided on building the event management system. We had a discussion with the team on what technologies would be implemented for the backend, frontend and database.
+We had decided on using AWS and python for the backend/database frameworks and also using html/css/javascript for frontend work.
+On Sunday 3:00pm we had a group meeting/discussion on the allocation of work and more clarification on the project specifactions, as well as outlining when our work should be completed. We created and started working on the project proposal.
+
+Week 2
+------
+
+I started writing some things on the group project proposal, mainly finishing up the background section. I've also started making hi-fi prototypes of the website using Axure, which I then put in the proposal for the web interface diagrams.
