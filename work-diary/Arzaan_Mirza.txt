@@ -15,4 +15,5 @@ Week 2:
 I started creating user stories on the backlog. I have assigned the tickets to group members and we have almost finalised what each member will be concentrating
 upon in the first sprint. I started planning and drawing out the solution for this project. Specifically looking at all the AWS resources that we will be using
 and how they will be connected with our flask webframe work. I also started to contribute to the project proposal, and writing out things in the proposal whenever 
-I get the opportunity.  
+I get the opportunity. I started doing some coding and creating templates for our code to understand what is required in this project coding-wise. This helps me 
+plan things and understand if all the services we are using are able to connect with each other and do what we expect them to do. 
