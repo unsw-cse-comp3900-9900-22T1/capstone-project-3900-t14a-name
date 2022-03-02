@@ -1,5 +1,12 @@
-2022-02-02: Had lab
+2022-02-15: Had lab. Set up Jira environment, decided on event management system.
+
+2022-02-22: Had lab. Set up Github repository, was assigned tasks to code but priority is writing proposal.
+
+2022-03-01: Missed lab due to extreme weather and not being able to get there. Contacted tutor, doesn't seem like there was much going on anyway.
+
+
 TODO: Customer review for events
   Leave reviews
   Reply to reviews
   Read reviews
+
