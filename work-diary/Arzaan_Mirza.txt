@@ -19,3 +19,5 @@ I get the opportunity. I started doing some coding and creating templates for ou
 plan things and understand if all the services we are using are able to connect with each other and do what we expect them to do. 
 
 Week 3:
+
+I started setting up the database for our project which was on AWS. I wrote methods to POST and GET information to and from our tables. I contributed to the project proposal, writing all the AWS services that the team may use, specifiying in depth how/what/why we may use each technology that has been mentioned. As a Scrum Master I also completed the User stories on Jira and started the sprint so that the group can now use Jira to track their work progress. 
