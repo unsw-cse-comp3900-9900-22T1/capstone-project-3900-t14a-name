@@ -22,5 +22,5 @@ Week 3:
 
 I started setting up the database for our project which was on AWS. I wrote methods to POST and GET information to and from our tables. I contributed to the project
 proposal, writing all the AWS services that the team may use, specifiying in depth how/what/why we may use each technology that has been mentioned. As a Scrum
-Master I also completed the User stories on Jira and started the sprint so that the group can now use Jira to track their work progress.
+Master I also completed the User stories on Jira and started the sprint so that the group can now use Jira to track their work progress. I also was able to complete the functionalities for setting up the database and adding the registration. 
 
