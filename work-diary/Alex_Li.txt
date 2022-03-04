@@ -7,3 +7,4 @@ Week2
 Provide some idea on the "novel feature". Discuss with group members on our current goal the proposal. Contribute to the proposal. I also rearched some examples of similar projects the wait management system as references.
 
 Week3
+Update user story in the proposal
