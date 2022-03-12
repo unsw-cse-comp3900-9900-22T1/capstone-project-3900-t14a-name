@@ -14,7 +14,7 @@ app = Flask(__name__)
 def home():
 
     events_data = get_dynamodb("event_details")
-    return events_data
+    return render_template("index.html", data = events_data)
 
 @app.route('/register', methods=["POST","GET"])
 def register():
@@ -83,6 +83,8 @@ def create_event():
             "ticket_price": request.form['ticket_price'],
         }
 
+        event_info ['list_attendees'] = ""
+        
         if check_event_details(event_info):
             pass
 
@@ -94,7 +96,24 @@ def create_event():
         return render_template("create_event.html")
 
 
+
+@app.route('/book_ticket/<event_name>', methods = ["POST","GET"])
+def book_ticket(event_name):
     
+    if request.method == "POST":
+        
+        ticket = {
+            "Pname": request.form['Pname'],
+            "Pemail":request.form['Pemail'],
+            "ticketQuantity":request.form['ticketQuantity'],
+            "cardNumber":request.form['cardNumber'],
+            "month":request.form['month'],
+            "year":request.form['year'],
+            "cvc":requst.form['cvc'],        
+        }
+         
+    else:
+        return render_template("booking.html", content = event_name)
 
 
 if __name__ == "__main__":

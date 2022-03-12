@@ -16,7 +16,8 @@ def post_event_details(event_info):
         'Start Date':{'S': event_info['start_date']},
         'End Date':{'S': event_info['end_date']},
         'Tickets Available': {'S': event_info['tickets_available']},
-        'Ticket Price': {'S': event_info['ticket_price']}
+        'Ticket Price': {'S': event_info['ticket_price']},
+        'List of Attendees': {'S': event_info['list_attendees']}
     }
 
     )
