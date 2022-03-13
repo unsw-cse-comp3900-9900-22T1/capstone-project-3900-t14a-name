@@ -4,6 +4,9 @@
 
 2022-03-01: Missed lab due to extreme weather and not being able to get there. Contacted tutor, doesn't seem like there was much going on anyway.
 
+2022-03-08: Missed another lab due to extreme weather and not wanting to drown while getting to uni. Fortunately there wasn't much at the lab.
+
+2022-03-13: Basic framework for reviews is up. Improved login to use hashes and not store passwords in plaintext.
 
 TODO: Customer review for events
   Leave reviews
