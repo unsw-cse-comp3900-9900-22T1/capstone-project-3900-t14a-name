@@ -14,7 +14,8 @@ app = Flask(__name__)
 def home():
 
     events_data = get_dynamodb("event_details")
-    return events_data
+    return render_template("home.html",data=events_data)
+    # return events_data
 
 @app.route('/register', methods=["POST","GET"])
 def register():
@@ -28,7 +29,7 @@ def register():
 
         else: # Otherwise, It proceeds to the login page
             post_account_details(username,password)
-            return redirect(url_for("login"))
+            return redirect(url_for("home"))
 
     else:
         return render_template("register.html")
