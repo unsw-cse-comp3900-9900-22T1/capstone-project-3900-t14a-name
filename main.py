@@ -5,9 +5,11 @@ from register import check_username_exists
 from login import check_account_credentials
 from create_event import post_event_details, check_event_details
 import json
+import hashlib
 import os
 
-global event_id = 1
+global event_id
+event_id = 1
 
 app = Flask(__name__)
 
@@ -22,13 +24,20 @@ def register():
 
     if request.method == "POST":
         username = request.form['nm']
-        password = request.form['pw']
 
         if check_username_exists(username): # If username already exists then it redirects it again to registration page.
             return redirect(url_for("register"))
 
         else: # Otherwise, It proceeds to the login page
-            post_account_details(username,password)
+            salt = os.urandom(32).hex()
+            password = hashlib.pbkdf2_hmac(
+                'sha256', 
+                bytes(request.form['pw'],'utf-8'), 
+                bytes(salt,'utf-8'),
+                100000
+            ).hex()
+
+            post_account_details(username,salt,password)
             return redirect(url_for("login"))
 
     else:
@@ -40,9 +49,9 @@ def login():
 
     if request.method == "POST":
         username = request.form['nm']
-        password = request.form['pw']
+        plaintext = request.form['pw']
 
-        if check_account_credentials(username,password): # If an account like this exists, then it is succesfully logged in
+        if check_account_credentials(username,plaintext): # If an account like this exists, then it is succesfully logged in
             return "Succesfully Logged In"
         else:
             return redirect(url_for("login"))
@@ -74,7 +83,7 @@ def create_event():
     if request.method == "POST":
 
         event_info = {
-            "event_id" = event_id,
+            "event_id": event_id,
             "title": request.form['title'],
             "description": request.form['description'],
             "type": request.form['type'],

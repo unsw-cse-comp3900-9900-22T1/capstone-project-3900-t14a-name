@@ -20,6 +20,7 @@ review = {
 '''
 
 global review_id
+review_id = 1
 
 def post_review(session_token):
     #check if session token is valid
