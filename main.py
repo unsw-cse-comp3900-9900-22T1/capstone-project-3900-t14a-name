@@ -7,6 +7,7 @@ from create_event import post_event_details, check_event_details
 import json
 import os
 
+global event_id = 1
 
 app = Flask(__name__)
 
@@ -73,6 +74,7 @@ def create_event():
     if request.method == "POST":
 
         event_info = {
+            "event_id" = event_id,
             "title": request.form['title'],
             "description": request.form['description'],
             "type": request.form['type'],
@@ -82,6 +84,8 @@ def create_event():
             "tickets_available": request.form['tickets_available'],
             "ticket_price": request.form['ticket_price'],
         }
+
+        event_id += 1
 
         event_info ['list_attendees'] = ""
         
@@ -97,8 +101,8 @@ def create_event():
 
 
 
-@app.route('/book_ticket/<event_name>', methods = ["POST","GET"])
-def book_ticket(event_name):
+@app.route('/book_ticket/<event_id>', methods = ["POST","GET"])
+def book_ticket(event_id):
     
     if request.method == "POST":
         
@@ -113,7 +117,7 @@ def book_ticket(event_name):
         }
          
     else:
-        return render_template("booking.html", content = event_name)
+        return render_template("booking.html", content = event_id)
 
 
 if __name__ == "__main__":

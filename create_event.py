@@ -9,6 +9,7 @@ def post_event_details(event_info):
     check_output = client.put_item(TableName='event_details',
 
     Item={
+        'Event ID':{'S': event_info['event_id']},
         'Event Title':{'S': event_info['title']},
         'Description':{'S': event_info['description']},
         'Type':{'S': event_info['type']},
