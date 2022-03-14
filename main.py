@@ -1,4 +1,5 @@
 from flask import render_template, request, redirect, url_for, Flask, session
+from auth import generate_token
 from get_dynamodb import get_dynamodb
 from post_to_account_dynamodb import post_account_details
 from register import check_username_exists
@@ -6,6 +7,7 @@ from login import check_account_credentials
 from create_event import post_event_details, check_event_details
 import json
 import hashlib
+import secrets
 import os
 
 global event_id
@@ -30,7 +32,7 @@ def register():
             return redirect(url_for("register"))
 
         else: # Otherwise, It proceeds to the login page
-            salt = os.urandom(32).hex()
+            salt = secrets.token_urlsafe(64)
             password = hashlib.pbkdf2_hmac(
                 'sha256', 
                 bytes(request.form['pw'],'utf-8'), 
@@ -53,7 +55,9 @@ def login():
         plaintext = request.form['pw']
 
         if check_account_credentials(username,plaintext): # If an account like this exists, then it is succesfully logged in
-            return "Succesfully Logged In"
+            token = generate_token(username)
+            #TODO: set token as cookie
+            return token
         else:
             return redirect(url_for("login"))
 
