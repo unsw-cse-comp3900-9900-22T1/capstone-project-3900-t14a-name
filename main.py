@@ -4,6 +4,7 @@ from post_to_account_dynamodb import post_account_details
 from register import check_username_exists
 from login import check_account_credentials
 from create_event import post_event_details, check_event_details
+from search import search_title_and_description,filter_event_types,search_all
 import json
 import os
 
@@ -93,7 +94,33 @@ def create_event():
     else:
         return render_template("create_event.html")
 
+@app.route('/search', methods=["POST","GET"])
+def search():
 
+    if request.method == "POST":
+
+        # Searches both title/description and event type
+        if request.form['search'] and request.form['filter_event_types']:
+            search_input = request.form['search']
+            event_types = request.form['filter_event_types']
+            data = search_all(search_input,event_types)
+            return json.dumps(data)
+
+        # Searches only title/description
+        elif request.form['search']:
+            search_input = request.form['search']
+            data = search_title_and_description(search_input)
+            return json.dumps(data)
+
+        # Searches only event type
+        elif request.form['filter_event_types']:
+            event_types = request.form['filter_event_types']
+            data = filter_event_types(event_types)
+            return json.dumps(data)
+
+
+    else:
+        return render_template("search.html")
     
 
 
