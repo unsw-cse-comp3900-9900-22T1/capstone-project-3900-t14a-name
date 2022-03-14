@@ -8,6 +8,8 @@
 
 2022-03-13: Basic framework for reviews is up. Improved login to use hashes and not store passwords in plaintext.
 
+2022-03-14: Reviews can now be left, 
+
 TODO: Customer review for events
   Leave reviews
   Reply to reviews

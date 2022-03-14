@@ -38,7 +38,7 @@ def register():
                 100000
             ).hex()
 
-            post_account_details(username,password)
+            post_account_details(username,salt,password)
             return redirect(url_for("home"))
 
     else:
@@ -123,7 +123,7 @@ def book_ticket(event_id):
             "cardNumber":request.form['cardNumber'],
             "month":request.form['month'],
             "year":request.form['year'],
-            "cvc":requst.form['cvc'],        
+            "cvc":request.form['cvc'],        
         }
          
     else:
