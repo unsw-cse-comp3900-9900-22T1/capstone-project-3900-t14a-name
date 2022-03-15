@@ -1,4 +1,5 @@
 from flask import render_template, request, redirect, url_for, Flask, session
+from auth import generate_token
 from get_dynamodb import get_dynamodb
 from post_to_account_dynamodb import post_account_details
 from register import check_username_exists
@@ -6,8 +7,12 @@ from login import check_account_credentials
 from create_event import post_event_details, check_event_details
 from search import search_title_and_description,filter_event_types,search_all
 import json
+import hashlib
+import secrets
 import os
 
+global event_id
+event_id = 1
 
 app = Flask(__name__)
 
@@ -23,13 +28,20 @@ def register():
 
     if request.method == "POST":
         username = request.form['nm']
-        password = request.form['pw']
 
         if check_username_exists(username): # If username already exists then it redirects it again to registration page.
             return redirect(url_for("register"))
 
         else: # Otherwise, It proceeds to the login page
-            post_account_details(username,password)
+            salt = secrets.token_urlsafe(64)
+            password = hashlib.pbkdf2_hmac(
+                'sha256', 
+                bytes(request.form['pw'],'utf-8'), 
+                bytes(salt,'utf-8'),
+                100000
+            ).hex()
+
+            post_account_details(username,salt,password)
             return redirect(url_for("home"))
 
     else:
@@ -41,10 +53,12 @@ def login():
 
     if request.method == "POST":
         username = request.form['nm']
-        password = request.form['pw']
+        plaintext = request.form['pw']
 
-        if check_account_credentials(username,password): # If an account like this exists, then it is succesfully logged in
-            return "Succesfully Logged In"
+        if check_account_credentials(username,plaintext): # If an account like this exists, then it is succesfully logged in
+            token = generate_token(username)
+            #TODO: set token as cookie
+            return token
         else:
             return redirect(url_for("login"))
 
@@ -75,6 +89,7 @@ def create_event():
     if request.method == "POST":
 
         event_info = {
+            "event_id": event_id,
             "title": request.form['title'],
             "description": request.form['description'],
             "type": request.form['type'],
@@ -85,6 +100,10 @@ def create_event():
             "ticket_price": request.form['ticket_price'],
         }
 
+        event_id += 1
+
+        event_info ['list_attendees'] = ""
+        
         if check_event_details(event_info):
             pass
 
@@ -97,7 +116,6 @@ def create_event():
 
 @app.route('/search', methods=["POST","GET"])
 def search():
-
     if request.method == "POST":
 
         # Searches both title/description and event type
@@ -122,7 +140,24 @@ def search():
 
     else:
         return render_template("search.html")
-    
+
+
+@app.route('/book_ticket/<event_id>', methods = ["POST","GET"])
+def book_ticket(event_id):
+    if request.method == "POST":
+        
+        ticket = {
+            "Pname": request.form['Pname'],
+            "Pemail":request.form['Pemail'],
+            "ticketQuantity":request.form['ticketQuantity'],
+            "cardNumber":request.form['cardNumber'],
+            "month":request.form['month'],
+            "year":request.form['year'],
+            "cvc":request.form['cvc'],        
+        }
+         
+    else:
+        return render_template("booking.html", content = event_id)
 
 
 if __name__ == "__main__":
