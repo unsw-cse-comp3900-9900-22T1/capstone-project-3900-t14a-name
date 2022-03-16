@@ -42,7 +42,7 @@ def register():
             ).hex()
 
             post_account_details(username,salt,password)
-            return redirect(url_for("home"))
+            return redirect(url_for("login"))
 
     else:
         return render_template("register.html")

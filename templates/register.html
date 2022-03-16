@@ -8,8 +8,22 @@
         <p>Username:</p>
         <p><input type="text" name="nm" /></p>
         <p>Password:</p>
-        <p><input type="text" name="pw" /></p>
+        <p><input type="password" name="pw" id="myInput" /></p>
+        <!-- An element to toggle between password visibility -->
+        <input type="checkbox" onclick="myFunction()">Show Password
         <p><input type="submit" value="register" /></p>
     </form>
 </body>
 </html>
+
+<script>
+
+function myFunction() {
+    var x = document.getElementById("myInput");
+    if (x.type === "password") {
+      x.type = "text";
+    } else {
+      x.type = "password";
+    }
+  }
+</script>
