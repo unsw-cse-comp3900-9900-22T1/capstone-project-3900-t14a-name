@@ -21,7 +21,6 @@ def check_account_credentials(username,plaintext):
             bytes(salt,'utf-8'),
             100000
         ).hex()
-
         if response['Item']['Username']['S'] == username and response['Item']['Password']['S'] == password:
             return True
 
