@@ -27,7 +27,12 @@ def home():
 def register():
 
     if request.method == "POST":
-        username = request.form['nm']
+        username = request.form['username']
+        password = request.form['password']
+        fullname = request.form['fullname']
+        confirm_password = request.form['confirm_password']
+        email = request.form['email']
+        phone_number = request.form['phone']
 
         if check_username_exists(username): # If username already exists then it redirects it again to registration page.
             return redirect(url_for("register"))
@@ -36,13 +41,13 @@ def register():
             salt = secrets.token_urlsafe(64)
             password = hashlib.pbkdf2_hmac(
                 'sha256', 
-                bytes(request.form['pw'],'utf-8'), 
+                bytes(request.form['password'],'utf-8'), 
                 bytes(salt,'utf-8'),
                 100000
             ).hex()
 
             post_account_details(username,salt,password)
-            return redirect(url_for("home"))
+            return redirect(url_for("login"))
 
     else:
         return render_template("register.html")
@@ -54,7 +59,6 @@ def login():
     if request.method == "POST":
         username = request.form['nm']
         plaintext = request.form['pw']
-
         if check_account_credentials(username,plaintext): # If an account like this exists, then it is succesfully logged in
             token = generate_token(username)
             #TODO: set token as cookie
