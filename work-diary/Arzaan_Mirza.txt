@@ -30,3 +30,11 @@ Week 4:
 In week 4, I mainly was just focusing on the planning and finishing my own tasks. The main focus of this sprint was that in each of the user stories we have, 
 we are able to finish the MVP of each user story. This will allow us ample time in sprint 2 & 3 to focus on improving it and making the functionalities more
 advanced. I was able to finish all my user stories in time in their most basic sense. Now, In sprint 2 & 3 I will focus on adding more advanced functionality so that It looks and works better. With the main focus being creating a more advanced frontend so we have some sort of idea what the end product will be. 
+
+
+Week 5:
+
+This week I continued where I left off last week which was majority coding all the user stories that were assigned to me. As our progressive demo was
+due during the lab, our group tried to get everything done beforehand however we still had a few user stories left to at the end our of our sprint. We also 
+started the Sprint 2, in which the main objectives were to create the frontend for all the functionalities we individually implemented in Sprint 1. So I was just writing html/css/js code so that we have a nice frontend along with our backend.
+
