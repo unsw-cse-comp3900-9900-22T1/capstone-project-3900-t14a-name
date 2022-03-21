@@ -1,6 +1,47 @@
 <!doctype html>
 <html lang="en">
   <head>
+
+    <style>
+      .Content_Blocks {
+
+        padding-top: 60px;
+        padding-left: 30px;
+      }
+
+      .Text_Box {
+        padding-top: 10px;
+        padding-left: 30px;
+      }
+
+      .Box {
+        margin: 0rem;
+        display: inline-table;
+        flex-direction: column;
+        margin-left: 1.5rem;
+        margin-top: 1rem;
+        width: 900px;
+        align-content: center;
+        height: 400px;
+        background-color: white;
+        padding: 0.1rem;
+        padding-bottom: 0rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        outline: 2px solid black;
+      }
+
+      .btnSubmit {
+      border:none;
+      border-radius:1.5rem;
+      padding: 1%;
+      width: 20%;
+      cursor: pointer;
+      background: #24423F;
+      color: #fff;
+    }
+
+    </style>
     <link rel="stylesheet" href="headers.css">
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -52,7 +93,12 @@
     </nav>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-
+ 
   </body>
+  <div class="Content_Blocks">
+    {% block content_block %}
 
+
+    {% endblock %}
+  </div>
 </html>

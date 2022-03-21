@@ -10,6 +10,7 @@ import json
 import hashlib
 import secrets
 import os
+import datetime
 
 global event_id
 event_id = 1
@@ -20,6 +21,8 @@ app = Flask(__name__)
 def home():
 
     events_data = get_dynamodb("event_details")
+    events_data = json.loads(events_data) # Converts it back to JSON so that html can format it properly
+    events_data.sort(key=lambda x: datetime.datetime.strptime(x['Start Date'], '%d/%m/%Y')) # Sorts the Start Date from closest to far so thats the order it shows on the website
     return render_template("home.html",data=events_data)
     # return events_data
 
@@ -93,7 +96,7 @@ def create_event():
     if request.method == "POST":
 
         event_info = {
-            "event_id": event_id,
+            # "event_id": event_id,
             "title": request.form['title'],
             "description": request.form['description'],
             "type": request.form['type'],
@@ -104,7 +107,7 @@ def create_event():
             "ticket_price": request.form['ticket_price'],
         }
 
-        event_id += 1
+        # event_id += 1
 
         event_info ['list_attendees'] = ""
         
@@ -117,6 +120,11 @@ def create_event():
 
     else:
         return render_template("create_event.html")
+
+@app.route('/event_info=<Event_Title>', methods=["POST","GET"])
+def event_info(Event_Title):
+    return Event_Title
+
 
 @app.route('/search', methods=["POST","GET"])
 def search():
