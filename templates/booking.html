@@ -1,38 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+<meta name="robots" content="noindex,follow" />
+</head>
 <body>
-    <form action="action">
-        <h1>Payment for {{content}}</h1>
-        <p></p>
-        <div class = "paymentOptions">
-            <h2> Payment Options </h2>
-            <li><a href =""> Paypal </a></li>
-            <li><a href =""> Credit Card </a></li>
+
+  <div class="checkout-panel">
+    <div class="panel-body">
+      <h2 class="title">Checkout</h2>
+
+
+      <div class="payment-method">
+        <label for="card" class="method card">
+          <div class="card-logos">
+            <img src="img/visa_logo.png"/>
+            <img src="img/mastercard_logo.png"/>
+          </div>
+
+          <div class="radio-input">
+            <input id="card" type="radio" name="payment">
+            Pay with credit card
+          </div>
+        </label>
+
+        <label for="paypal" class="method paypal">
+          <img src="img/paypal_logo.png"/>
+          <div class="radio-input">
+            <input id="paypal" type="radio" name="payment">
+            Pay with PayPal
+          </div>
+        </label>
+      </div>
+
+      <div class="input-fields">
+        <div class="column-1">
+          <label for="cardholder">Cardholder's Name</label>
+          <input type="text" id="cardholder" />
+
+          <div class="small-inputs">
+            <div>
+              <label for="date">Valid thru</label>
+              <input type="text" id="date" placeholder="MM / YY" />
+            </div>
+
+            <div>
+              <label for="verification">CVV / CVC *</label>
+              <input type="password" id="verification"/>
+            </div>
+          </div>
+
         </div>
-        <p></p>
-        <label for="name">Payer Name</label><br>
-        <input class="box" type="text" name="Pname" id="Pname" placeholder="Enter Name"><br>
-        <label for="pemail">Enter Email</label><br>
-        <input class="box" type="text" name="Pemail" id="Pemail" placeholder="Enter Email"><br>
-        <label for="ticketQuantity">Quantity of tickets</label><br>
-        <input class="box" type="number" name="ticketQuantity" id="ticketQuantity" placeholder="1"><br>
-        <label for="cnum">Card Number</label><br>
-        <input class="box" type="number" name="cardNumber" id="cardNumber" placeholder="1234 1234 1234 1234"><br>
-        <div class="div1">
-            <label for="cardex">Card expiry month</label><br>
-            <input class="box2" type="month" name="month" id="month" placeholder="MM"><br>
+        <div class="column-2">
+          <label for="cardnumber">Card Number</label>
+          <input type="password" id="cardnumber"/>
+
+          <span class="info">* CVV or CVC is the card security code, unique three digits number on the back of your card separate from its number.</span>
         </div>
-        <div class="div1">
-            <label for="year">Card expiry year</label><br>
-        <input class="box2" type="year" name="yaar" id="year" placeholder="yyyy"><br>
-        </div>
-        <div class="div1">
-            <label for="CVC">Card CVC</label><br>
-        <input class="box2" type="CVC" name="cvc" id="cvc" placeholder="cvc"><br>
-        </div>
-        <p></p>
-        <input type = "submit" name = "pay" value = "Pay">
-        <input type = "submit" name = "cancel" value = "Cancel">
-    </form>
+      </div>
+    </div>
+
+    <div class="panel-footer">
+      <button class="btn back-btn">Cancel</button>
+      <button class="btn next-btn">Pay</button>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
