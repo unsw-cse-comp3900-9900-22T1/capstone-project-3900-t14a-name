@@ -128,30 +128,15 @@ def event_info(Event_Title):
 
 @app.route('/search', methods=["POST","GET"])
 def search():
+
+
     if request.method == "POST":
-
-        # Searches both title/description and event type
-        if request.form['search'] and request.form['filter_event_types']:
-            search_input = request.form['search']
-            event_types = request.form['filter_event_types']
-            data = search_all(search_input,event_types)
-            return json.dumps(data)
-
-        # Searches only title/description
-        elif request.form['search']:
-            search_input = request.form['search']
-            data = search_title_and_description(search_input)
-            return json.dumps(data)
-
-        # Searches only event type
-        elif request.form['filter_event_types']:
-            event_types = request.form['filter_event_types']
-            data = filter_event_types(event_types)
-            return json.dumps(data)
-
+        search_input = request.form['search']
+        events_data = search_title_and_description(search_input)
+        return render_template("home.html",data=events_data)
 
     else:
-        return render_template("search.html")
+        return render_template("home.html")
 
 
 @app.route('/book_ticket/<event_id>', methods = ["POST","GET"])
