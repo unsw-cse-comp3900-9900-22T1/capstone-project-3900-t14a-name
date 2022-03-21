@@ -1,1 +1,32 @@
 {% extends "base.html" %}
+{% block content_block %}
+
+    <br><br><br>
+    {% for item in data %}
+
+
+
+        <div class = "Box">
+            <div class = "Text_Box">
+                <h2>{{item["Event Title"]}}</h2>
+                <h3>{{item["Start Date"]}}</h3>
+                <h4>Tickets Available: {{item["Tickets Available"]}}</h4>
+                <form method="POST" action="/event_info={{item["Event Title"]}}">  
+                    <input class="btnSubmit" type="submit" value="Book Tickets"></input>
+                </form>
+                <br>
+                <text>{{item["Description"]}}</text>
+                <br><br><br><br><br><br>
+                <h3>{{item["Venue"]}}</h3>
+            </div>
+        </div>
+        
+    
+    {% endfor %}
+
+
+
+
+
+    <br><br><br><br><br><br><br>
+{% endblock %}
