@@ -24,12 +24,16 @@ def search_title_and_description(search_input):
     data = get_dynamodb("event_details")
     data = json.loads(data)
     list_of_related_events = []
+    search_input = search_input.lower() # Compare all strings with lowercases
 
     for each_event in data:
-        if search_input in each_event['Event Title']:
+        if search_input in each_event['Event Title'].lower():
             list_of_related_events.append(each_event)
 
-        elif search_input in each_event['Description']:
+        elif search_input in each_event['Description'].lower():
+            list_of_related_events.append(each_event)
+
+        elif search_input in each_event['Type'].lower():
             list_of_related_events.append(each_event)
 
 
