@@ -1,6 +1,6 @@
 from flask import render_template, request, redirect, url_for, Flask, session
 from auth import generate_token
-from get_dynamodb import get_dynamodb
+from get_dynamodb import get_dynamodb,get_dynamodb_item
 from post_to_account_dynamodb import post_account_details
 from register import check_username_exists
 from login import check_account_credentials
@@ -123,7 +123,9 @@ def create_event():
 
 @app.route('/event_info=<Event_Title>', methods=["POST","GET"])
 def event_info(Event_Title):
-    return Event_Title
+    
+    event_data = get_dynamodb_item("event_details",Event_Title)
+    return render_template("event_info.html",data=event_data)
 
 
 @app.route('/search', methods=["POST","GET"])
@@ -137,6 +139,14 @@ def search():
 
     else:
         return render_template("home.html")
+
+@app.route('/search_type=<Type>', methods=["POST","GET"])
+def search_type(Type):
+
+    search_input = Type
+    events_data = search_title_and_description(search_input)
+    return render_template("home.html",data=events_data)
+
 
 
 @app.route('/book_ticket/<event_id>', methods = ["POST","GET"])
