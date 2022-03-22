@@ -1,0 +1,62 @@
+<html>
+    <style>
+        body{
+            background-color: white;
+        }
+      .Text_Box {
+        padding-top: 10px;
+        padding-left: 30px;
+      }
+
+      .Box {
+        margin: 0rem;
+        display: inline-table;
+        flex-direction: column;
+        margin-left: 1.5rem;
+        margin-top: 1rem;
+        width: 900px;
+        align-content: center;
+        height: 400px;
+        background-color: white;
+        padding: 0.1rem;
+        padding-bottom: 0rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+      }
+
+      .btnSubmit {
+        margin-top: -5.5rem;
+        margin-left: 15rem;
+        border:none;
+        border-radius:2rem;
+        padding: 1%;
+        width: 30%;
+        cursor: pointer;
+        background: #24423F;
+        color: #fff;
+    }
+
+    </style>
+
+    <body>
+        <div class = "Box">
+            <div class = "Text_Box">
+                <h2>{{data["Event Title"]}}</h2>
+                <h3>{{data["Start Date"]}}</h3>
+                <h4>Tickets Available: {{data["Tickets Available"]}}</h4>
+                <form method="POST" action="/book_ticket/{{data["ID"]}}">  
+                    <input class="btnSubmit" type="submit" value="Book Tickets"></input>
+                </form>
+                <br>
+                <text>{{data["Description"]}}</text>
+                <br><br><br><br><br><br>
+                <h3>Location: {{data["Venue"]}}</h3>
+            </div>
+        </div>
+
+        <br><br><br>
+        <h1>&nbsp &nbsp Reviews</h1>
+    </body>
+
+
+</html>
