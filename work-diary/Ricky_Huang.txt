@@ -11,3 +11,13 @@ Week 2
 ------
 
 I started writing some things on the group project proposal, mainly finishing up the background section. I've also started making hi-fi prototypes of the website using Axure, which I then put in the proposal for the web interface diagrams.
+
+
+Week 4
+------
+Sprint 1 is due this week, so I've started working on the booking system. I will aim to complete the booking system for the backend as well as emails by sprint 2.
+
+
+Week 5
+------
+Our team started sprint 2 this week. I've created a basic frontend for the booking page. 
