@@ -1,3 +1,4 @@
+from click import confirm
 from flask import render_template, request, redirect, url_for, Flask, session
 from auth import generate_token
 from get_dynamodb import get_dynamodb,get_dynamodb_item
@@ -6,6 +7,7 @@ from register import check_username_exists
 from login import check_account_credentials
 from create_event import post_event_details, check_event_details
 from search import search_title_and_description,filter_event_types,search_all
+from reset_password import confirm_user_detail, confirm_password, check_username_not_exists
 import json
 import hashlib
 import secrets
@@ -72,6 +74,34 @@ def login():
     else:
         return render_template("login.html")
 
+@app.route('/reset_password', methods = ["POST","GET"])
+def reset_password():
+
+    if request.method == "POST":
+        username = request.form['username']
+        register_email = request.form['email']
+
+        if check_username_not_exists(username):
+            return redirect(url_for("reset_password"))
+
+        if confirm_user_detail(username, register_email):
+            new_password = request.form['new_password']
+            confirm_new_password = request.form['confirm_newpassword']
+
+            if confirm_password(new_password, confirm_new_password):
+                salt = secrets.token_urlsafe(64)
+                password = hashlib.pbkdf2_hmac(
+                    'sha256', 
+                    bytes(request.form['new_password'],'utf-8'), 
+                    bytes(salt,'utf-8'),
+                    100000
+                ).hex()    
+                post_account_details(username,salt,password)####
+                return redirect(url_for("login"))
+            else: 
+                return redirect(url_for("reset_password"))
+    else:
+        return render_template("reset_password.html")
 
 @app.route('/get_account_details', methods=["GET"])
 def get_account_details():
