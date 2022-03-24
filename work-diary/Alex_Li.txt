@@ -7,4 +7,11 @@ Week2
 Provide some idea on the "novel feature". Discuss with group members on our current goal the proposal. Contribute to the proposal. I also rearched some examples of similar projects the wait management system as references.
 
 Week3
-Update user story in the proposal
+Update user story in the proposal.
+
+Week4
+Completing the tasks assigned to me in sprint 1, e.g the search bar function. The search bar is able to search using both name and filter drop bar to provide specific events.
+
+Week5
+Attend the progressive demon and discussed about what can be improved during the lab and start sprint 2.
+
