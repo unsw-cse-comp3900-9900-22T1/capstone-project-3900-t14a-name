@@ -1,12 +1,6 @@
-<<<<<<< HEAD
-from flask import render_template, request, redirect, url_for, Flask, make_response
+from flask import render_template, request, redirect, url_for, Flask, make_response, session
 from auth import generate_token, get_session_token
 from get_dynamodb import get_dynamodb
-=======
-from flask import render_template, request, redirect, url_for, Flask, session
-from auth import generate_token
-from get_dynamodb import get_dynamodb,get_dynamodb_item
->>>>>>> 3d8aabdd1a0ec5812e5c0ebfe09fbec282ae4ddf
 from post_to_account_dynamodb import post_account_details
 from register import check_username_exists
 from login import check_account_credentials
@@ -137,7 +131,6 @@ def event_info(Event_Title):
 
 @app.route('/search', methods=["POST","GET"])
 def search():
-<<<<<<< HEAD
 
     session_token = get_session_token(request)
     if session_token is None:
@@ -145,8 +138,6 @@ def search():
         return
 
     if request.method == "POST":
-=======
->>>>>>> 3d8aabdd1a0ec5812e5c0ebfe09fbec282ae4ddf
 
 
     if request.method == "POST":
