@@ -1,7 +1,57 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <link rel="stylesheet" href="headers.css">
+
+    <style>
+      ul {
+        position: absolute;
+        left: 0px;
+        top: 57px;
+        height: 40px;
+        width: 100%;
+        background-color: #f7f9fa;
+      }
+      
+      .Content_Blocks {
+
+        padding-top: 60px;
+        padding-left: 30px;
+        background-color: white;
+      }
+
+      .Text_Box {
+        padding-top: 10px;
+        padding-left: 30px;
+      }
+
+      .Box {
+        margin: -2rem;
+        display: inline-table;
+        flex-direction: column;
+        margin-left: 1.5rem;
+        margin-top: -1rem;
+        width: 900px;
+        align-content: center;
+        height: 400px;
+        background-color: white;
+        padding: 0.1rem;
+        padding-bottom: 0rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        outline: 2px solid black;
+      }
+
+      .btnSubmit {
+        border:none;
+        border-radius:1.5rem;
+        padding: 1%;
+        width: 20%;
+        cursor: pointer;
+        background: #24423F;
+        color: #fff;
+    }
+
+    </style>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -20,26 +70,32 @@
             <img 
             class="d-inline-block align-top"
             src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/c0840e59-db43-4681-ae7b-31a04dc4bc55/d7eqdvw-4e97ac92-e4b9-4498-9655-e4d612eb478b.png/v1/fill/w_1192,h_670,strp/random_logo_by_criticl_d7eqdvw-pre.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9OTAwIiwicGF0aCI6IlwvZlwvYzA4NDBlNTktZGI0My00NjgxLWFlN2ItMzFhMDRkYzRiYzU1XC9kN2VxZHZ3LTRlOTdhYzkyLWU0YjktNDQ5OC05NjU1LWU0ZDYxMmViNDc4Yi5wbmciLCJ3aWR0aCI6Ijw9MTYwMCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.X991O1jF5lTNZbbEoHEfoo6nlHEihBMHMIm5-uBCXcU"
-            widht="30" height="30" />
+            width="50" height="30" />
             EventAus
         </a>
 
-        <!-- <div class="collapse navbar-collapse" 
+        <div class="collapse navbar-collapse" 
         id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item active">
                 <a href="/" class="nav-link active">&nbsp &nbsp Home &nbsp</a>
             </li>
             <li class="nav-item active">
-                <a href="/register" class="nav-link active">&nbsp S &nbsp</a>
+                <a href="/search_type=Sports" class="nav-link active">&nbsp Sports &nbsp</a>
             </li>
             <li class="nav-item active">
-                <a href="/login" class="nav-link active">&nbsp Sign In &nbsp</a>
+                <a href="/search_type=Arts" class="nav-link active">&nbsp Arts &nbsp</a>
             </li>
+            <li class="nav-item active">
+              <a href="/search_type=Theatre" class="nav-link active">&nbsp Theatre &nbsp</a>
+          </li>
+          <li class="nav-item active">
+            <a href="/search_type=Festivals" class="nav-link active">&nbsp Festivals &nbsp</a>
+        </li>
         </ul>
-        </div> -->
-        <form action="#" method="post" class="col-15 col-lg-7 mb-3 mb-lg-1 me-lg-12">
-          <input type="search" class="form-control form-control-dark" placeholder="Search events" aria-label="Search">
+        </div>
+        <form action="/search" method="post" class="col-15 col-lg-7 mb-3 mb-lg-1 me-lg-12">
+          <input type="search" class="form-control form-control-dark" placeholder="Search events" name="search" aria-label="Search">
         </form>
         
         <a href="/about" class="nav-link active">&nbsp Why EventAus?</a>
@@ -52,7 +108,12 @@
     </nav>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-
+ 
   </body>
+  <div class="Content_Blocks">
+    {% block content_block %}
 
+
+    {% endblock %}
+  </div>
 </html>

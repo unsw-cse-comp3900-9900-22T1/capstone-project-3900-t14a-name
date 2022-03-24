@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 from flask import render_template, request, redirect, url_for, Flask, make_response
 from auth import generate_token, get_session_token
 from get_dynamodb import get_dynamodb
+=======
+from flask import render_template, request, redirect, url_for, Flask, session
+from auth import generate_token
+from get_dynamodb import get_dynamodb,get_dynamodb_item
+>>>>>>> 3d8aabdd1a0ec5812e5c0ebfe09fbec282ae4ddf
 from post_to_account_dynamodb import post_account_details
 from register import check_username_exists
 from login import check_account_credentials
@@ -10,6 +16,7 @@ import json
 import hashlib
 import secrets
 import os
+import datetime
 
 global event_id
 event_id = 1
@@ -20,6 +27,8 @@ app = Flask(__name__)
 def home():
 
     events_data = get_dynamodb("event_details")
+    events_data = json.loads(events_data) # Converts it back to JSON so that html can format it properly
+    events_data.sort(key=lambda x: datetime.datetime.strptime(x['Start Date'], '%d/%m/%Y')) # Sorts the Start Date from closest to far so thats the order it shows on the website
     return render_template("home.html",data=events_data)
     # return events_data
 
@@ -27,7 +36,12 @@ def home():
 def register():
 
     if request.method == "POST":
-        username = request.form['nm']
+        username = request.form['username']
+        password = request.form['password']
+        fullname = request.form['fullname']
+        confirm_password = request.form['confirm_password']
+        email = request.form['email']
+        phone_number = request.form['phone']
 
         if check_username_exists(username): # If username already exists then it redirects it again to registration page.
             return redirect(url_for("register"))
@@ -36,13 +50,13 @@ def register():
             salt = secrets.token_urlsafe(64)
             password = hashlib.pbkdf2_hmac(
                 'sha256', 
-                bytes(request.form['pw'],'utf-8'), 
+                bytes(request.form['password'],'utf-8'), 
                 bytes(salt,'utf-8'),
                 100000
             ).hex()
 
             post_account_details(username,salt,password)
-            return redirect(url_for("home"))
+            return redirect(url_for("login"))
 
     else:
         return render_template("register.html")
@@ -54,7 +68,6 @@ def login():
     if request.method == "POST":
         username = request.form['nm']
         plaintext = request.form['pw']
-
         if check_account_credentials(username,plaintext): # If an account like this exists, then it is succesfully logged in
             token_id, valid_until = generate_token(username)
             response = make_response()
@@ -90,7 +103,7 @@ def create_event():
     if request.method == "POST":
 
         event_info = {
-            "event_id": event_id,
+            # "event_id": event_id,
             "title": request.form['title'],
             "description": request.form['description'],
             "type": request.form['type'],
@@ -101,7 +114,7 @@ def create_event():
             "ticket_price": request.form['ticket_price'],
         }
 
-        event_id += 1
+        # event_id += 1
 
         event_info ['list_attendees'] = ""
         
@@ -115,8 +128,16 @@ def create_event():
     else:
         return render_template("create_event.html")
 
+@app.route('/event_info=<Event_Title>', methods=["POST","GET"])
+def event_info(Event_Title):
+    
+    event_data = get_dynamodb_item("event_details",Event_Title)
+    return render_template("event_info.html",data=event_data)
+
+
 @app.route('/search', methods=["POST","GET"])
 def search():
+<<<<<<< HEAD
 
     session_token = get_session_token(request)
     if session_token is None:
@@ -124,29 +145,25 @@ def search():
         return
 
     if request.method == "POST":
+=======
+>>>>>>> 3d8aabdd1a0ec5812e5c0ebfe09fbec282ae4ddf
 
-        # Searches both title/description and event type
-        if request.form['search'] and request.form['filter_event_types']:
-            search_input = request.form['search']
-            event_types = request.form['filter_event_types']
-            data = search_all(search_input,event_types)
-            return json.dumps(data)
 
-        # Searches only title/description
-        elif request.form['search']:
-            search_input = request.form['search']
-            data = search_title_and_description(search_input)
-            return json.dumps(data)
-
-        # Searches only event type
-        elif request.form['filter_event_types']:
-            event_types = request.form['filter_event_types']
-            data = filter_event_types(event_types)
-            return json.dumps(data)
-
+    if request.method == "POST":
+        search_input = request.form['search']
+        events_data = search_title_and_description(search_input)
+        return render_template("home.html",data=events_data)
 
     else:
-        return render_template("search.html")
+        return render_template("home.html")
+
+@app.route('/search_type=<Type>', methods=["POST","GET"])
+def search_type(Type):
+
+    search_input = Type
+    events_data = search_title_and_description(search_input)
+    return render_template("home.html",data=events_data)
+
 
 
 @app.route('/book_ticket/<event_id>', methods = ["POST","GET"])
