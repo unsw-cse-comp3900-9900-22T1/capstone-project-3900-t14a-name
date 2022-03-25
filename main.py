@@ -110,7 +110,7 @@ def create_event():
 
         # event_id += 1
 
-        event_info ['list_attendees'] = ""
+        event_info['list_attendees'] = []
         
         if check_event_details(event_info):
             pass
@@ -174,6 +174,9 @@ def book_ticket(event_id):
     else:
         return render_template("booking.html", content = event_id)
 
+@app.route('/book_trial', methods = ["POST","GET"])
+def book_trial():
+    return render_template("booking.html")
 
 if __name__ == "__main__":
     app.run(debug=True, port=3500)
