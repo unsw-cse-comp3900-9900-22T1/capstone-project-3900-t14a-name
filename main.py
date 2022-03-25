@@ -6,6 +6,7 @@ from register import check_username_exists
 from login import check_account_credentials
 from create_event import post_event_details, check_event_details
 from search import search_title_and_description,filter_event_types,search_all
+from password import check_password_strength
 import json
 import hashlib
 import secrets
@@ -37,7 +38,13 @@ def register():
         email = request.form['email']
         phone_number = request.form['phone']
 
-        if check_username_exists(username): # If username already exists then it redirects it again to registration page.
+        if check_username_exists(username): # If username already exists, fail registration
+            return redirect(url_for("register"))
+
+        if check_password_strength(password): # If password is too weak, fail registration
+            return redirect(url_for("register"))
+
+        if password != confirm_password: # type/copypaste passwords correctly please
             return redirect(url_for("register"))
 
         else: # Otherwise, It proceeds to the login page
@@ -76,6 +83,9 @@ def login():
 
 @app.route('/get_account_details', methods=["GET"])
 def get_account_details():
+    session_token = get_session_token(request)
+    if session_token is None:
+        return redirect(url_for("login"))
 
     if request.method == "GET":
 
@@ -84,6 +94,9 @@ def get_account_details():
 
 @app.route('/get_event_details', methods=["GET"])
 def get_event_details():
+    session_token = get_session_token(request)
+    if session_token is None:
+        return redirect(url_for("login"))
 
     if request.method == "GET":
 
@@ -93,6 +106,9 @@ def get_event_details():
     
 @app.route('/create_event', methods=["POST","GET"])
 def create_event():
+    session_token = get_session_token(request)
+    if session_token is None:
+        return redirect(url_for("login"))
 
     if request.method == "POST":
 
@@ -124,6 +140,9 @@ def create_event():
 
 @app.route('/event_info=<Event_Title>', methods=["POST","GET"])
 def event_info(Event_Title):
+    session_token = get_session_token(request)
+    if session_token is None:
+        return redirect(url_for("login"))
     
     event_data = get_dynamodb_item("event_details",Event_Title)
     return render_template("event_info.html",data=event_data)
@@ -131,14 +150,9 @@ def event_info(Event_Title):
 
 @app.route('/search', methods=["POST","GET"])
 def search():
-
     session_token = get_session_token(request)
     if session_token is None:
-        #put failure condition for no permissions here
-        return
-
-    if request.method == "POST":
-
+        return redirect(url_for("login"))
 
     if request.method == "POST":
         search_input = request.form['search']
@@ -150,6 +164,9 @@ def search():
 
 @app.route('/search_type=<Type>', methods=["POST","GET"])
 def search_type(Type):
+    session_token = get_session_token(request)
+    if session_token is None:
+        return redirect(url_for("login"))
 
     search_input = Type
     events_data = search_title_and_description(search_input)
@@ -159,6 +176,10 @@ def search_type(Type):
 
 @app.route('/book_ticket/<event_id>', methods = ["POST","GET"])
 def book_ticket(event_id):
+    session_token = get_session_token(request)
+    if session_token is None:
+        return redirect(url_for("login"))
+
     if request.method == "POST":
         
         ticket = {

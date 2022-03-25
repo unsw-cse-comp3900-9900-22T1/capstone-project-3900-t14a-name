@@ -12,6 +12,8 @@
 
 2022-03-15: Authentication via session tokens works now. Cookies are set and read.
 
+2022-03-25: Passwords are now checked for not being in the top 1000 worst passwords of all time before users are allowed to register..
+
 TODO: Customer review for events
   Leave reviews
   Reply to reviews
