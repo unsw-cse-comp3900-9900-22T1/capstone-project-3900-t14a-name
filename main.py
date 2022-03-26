@@ -1,5 +1,5 @@
 from flask import render_template, request, redirect, url_for, Flask, make_response, session
-from auth import generate_token, get_session_token
+from auth import generate_token, get_session_token, remove_token, session_token_to_user
 from get_dynamodb import get_dynamodb, get_dynamodb_item
 from post_to_account_dynamodb import post_account_details
 from register import check_username_exists
@@ -20,11 +20,17 @@ app = Flask(__name__)
 
 @app.route('/', methods=["POST","GET"])
 def home():
+    session_token = get_session_token(request)
+    if session_token is None:
+        username = ""
+    else:
+        username = session_token_to_user(session_token)
 
     events_data = get_dynamodb("event_details")
     events_data = json.loads(events_data) # Converts it back to JSON so that html can format it properly
     events_data.sort(key=lambda x: datetime.datetime.strptime(x['Start Date'], '%d/%m/%Y')) # Sorts the Start Date from closest to far so thats the order it shows on the website
-    return render_template("home.html",data=events_data)
+
+    return render_template("home.html",data=events_data,username=username)
     # return events_data
 
 @app.route('/register', methods=["POST","GET"])
@@ -71,7 +77,7 @@ def login():
         plaintext = request.form['pw']
         if check_account_credentials(username,plaintext): # If an account like this exists, then it is succesfully logged in
             token_id, valid_until = generate_token(username)
-            response = make_response()
+            response = make_response(redirect(url_for("home")))
             response.set_cookie("session-token", token_id, 604800, valid_until)
             return response
         else:
@@ -195,6 +201,18 @@ def book_ticket(event_id):
     else:
         return render_template("booking.html", content = event_id)
 
+
+@app.route('/logout', methods=["POST","GET"])
+def logout():
+    session_token = get_session_token(request)
+    if session_token is None:
+        return redirect(url_for("login"))
+
+    remove_token(session_token)
+
+    response = make_response(redirect(url_for("home")))
+    response.set_cookie("session-token", "", expires=0)
+    return response
 
 if __name__ == "__main__":
     app.run(debug=True, port=3500)

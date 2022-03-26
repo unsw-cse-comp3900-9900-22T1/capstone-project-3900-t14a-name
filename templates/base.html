@@ -103,7 +103,11 @@
 
         <div class="text-end">
           <a href="/register" type="button" class="btn btn-primary">Sign-up</a>
+          {% if username == "": %}
           <a href="/login" type="button" class="btn btn-outline-dark me-2">Login</a>
+          {% else %}
+          <a href="/logout" type="button" class="btn btn-outline-dark me-2">Log out</a>
+          {% endif %}
         </div>
     </nav>
 
