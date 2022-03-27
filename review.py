@@ -6,46 +6,61 @@ import boto3
 from datetime import date
 
 from auth import session_token_to_user
+from get_dynamodb import get_dynamodb_item
 
 client = boto3.client('dynamodb',region_name='ap-southeast-2',aws_access_key_id='AKIAQPNE33YVPQHU7F64',aws_secret_access_key='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')
 
-# to read reviews for an event, should be SELECT * FROM REVIEWS WHERE EVENT_TITLE = EVENT_TITLE SORT BY POSTED_DATE DESCENDING
-
+'''
+get_dynamodb_item("review_details","Free Beer")
 '''
 
-DB STRUCTURE: {
-    'ID':{'N': event_info['review_id']},
-    'Event Title':{'S': event_info['title']},
-    'Review Text':{'S': event_info['description']},
-    'Reply Text':{'S': event_info['type']},
-    'Posted Date':{'S': event_info['venue']},
-    'Edit Date':{'S': event_info['start_date']},
-    'Reply Date':{'S': event_info['end_date']},
-}
-
-MEMORY STRUCTURE: {
-    review_id: {
-        "event_title"
-        "username"
-        "review_text"
-        "reply_text"
-        "posted_date"
-        "edited_date"
-        "reply_date"
+def post_review_to_db(event_title, user, review):
+    check_output = client.update_item(TableName='review_details',
+    Item={
+        'Event Title':{'S': event_title},
+        'Reviews':{'M': {
+            user:{'M': {
+                "review_text":{'S':review['review_text']},
+                "reply_posted":{'BOOL':review['reply_posted']},
+                "reply_text":{'S':review['reply_text']},
+                "posted_date":{'S':str(review['posted_date'])},
+                "edited_date":{'S':str(review['edited_date'])},
+                "reply_date":{'S':str(review['reply_date'])}
+                }}
+        }}
     }
-}
-'''
-
-reviews = {}
-
-global review_id
-review_id = 1
-
+    )
+    return check_output
 
 """
 """
-def review_exists(check_id):
-    return check_id in reviews
+def get_reviews(event_title):
+    reviews = get_dynamodb_item("review_details",event_title)['Reviews']
+    print(reviews)
+    return reviews
+
+"""
+stupid hack to include keys 
+"""
+def get_reviews_alt(event_title):
+    reviews = get_dynamodb_item("review_details",event_title)['Reviews']
+    for reviewer in reviews:
+        reviews[reviewer]['username'] = reviewer
+    return reviews
+
+"""
+"""
+def review_exists(event_title, user):
+    try:
+        return user in get_reviews(event_title)
+    except Exception:
+        return False
+
+"""
+"""
+def get_review(event_title, user):
+    reviews = get_dynamodb_item("review_details",event_title)['Reviews']
+    return reviews[user]
 
 """
 """
@@ -53,76 +68,89 @@ def post_review(session_token, event_title, review_text):
     #check if session token is valid
     user = session_token_to_user(session_token)
     if user is None:
-        return None
+        return False
 
     #check if event exists and user has attended the event
 
 
     #check if a review by that user for that event does not already exist
+    if review_exists(event_title, user):
+        return False
 
-
-    #post review
-    review_id += 1
-    current_review_id = review_id
-    reviews[current_review_id] = {
-        "event_title":event_title,
-        "username":user.username,
+    review = {
         "review_text":review_text,
-        "reply_text":None,
+        "reply_posted":False,
+        "reply_text":"",
         "posted_date":date.today(),
         "edited_date":None,
         "reply_date":None
     }
-    
-    return current_review_id
+
+    post_review_to_db(event_title, user, review)
+
+    return review
 
 """
 """
-def edit_review(session_token, review_id, new_review):
+def edit_review(session_token, event_title, username, new_review):
     #check if session token is valid
     user = session_token_to_user(session_token)
-    if user is None:
-        return None
+    if not user == username:
+        return False
 
     #check if a review does already exist
+    if not review_exists(event_title, username):
+        return False
+
     #edit review
-    reviews[review_id]["review_text"] = new_review
-    reviews[review_id]["edited_date"] = date.today()
-    return True
-
-"""
-"""
-def delete_review(session_token, review_id):
-    #check if session token is valid
-    user = session_token_to_user(session_token)
-    if user is None:
-        return None
-
-    #check if a review does already exist
-    #delete review
-    event_title = reviews[review_id]["event_title"]
-    del reviews[review_id]
-
-    #cleanup references to review in event and user
+    review = get_review(event_title, username)
+    review["review_text"] = new_review
+    review["edited_date"] = date.today()
+    post_review_to_db(event_title, user, review)
 
     return True
 
 """
 """
-def reply_review(session_token, review_id, reply):
+def reply_review(session_token, event_title, username, reply):
     #check if session token is valid
     user = session_token_to_user(session_token)
     if user is None:
-        return None
+        return False
 
     #check if a review does already exist
+    if not review_exists(event_title, username):
+        return False
 
-
-    #check if event exists and user hosted the event
-    event_title = reviews[review_id]["event_title"]
+    #check if user hosted the event
 
     #reply to review
-    reviews[review_id]["reply_text"] = reply
-    reviews[review_id]["reply_date"] = date.today()
+    review = get_review(event_title, username)
+    review["reply_text"] = reply
+    review["reply_posted"] = True
+    review["reply_date"] = date.today()
+    post_review_to_db(event_title, user, review)
+
+    return True
+
+
+"""
+"""
+def delete_review(session_token, event_title, username):
+    #check if session token is valid
+    user = session_token_to_user(session_token)
+    if not user == username:
+        return False
+
+    #check if a review does already exist
+    if not review_exists(event_title, username):
+        return False
+
+    #delete review
+    review = get_review(event_title, username)
+
+    post_review_to_db(event_title, user, review)
+
+    #cleanup references to review in event and user
 
     return True

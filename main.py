@@ -3,6 +3,7 @@ from auth import generate_token, get_session_token, remove_token, session_token_
 from get_dynamodb import get_dynamodb, get_dynamodb_item
 from post_to_account_dynamodb import post_account_details
 from register import check_username_exists
+from review import get_reviews_alt
 from login import check_account_credentials
 from create_event import post_event_details, check_event_details
 from search import search_title_and_description,filter_event_types,search_all
@@ -32,6 +33,7 @@ def home():
 
     return render_template("home.html",data=events_data,username=username)
     # return events_data
+
 
 @app.route('/register', methods=["POST","GET"])
 def register():
@@ -87,6 +89,19 @@ def login():
         return render_template("login.html")
 
 
+@app.route('/logout', methods=["POST","GET"])
+def logout():
+    session_token = get_session_token(request)
+    if session_token is None:
+        return redirect(url_for("login"))
+
+    remove_token(session_token)
+
+    response = make_response(redirect(url_for("home")))
+    response.set_cookie("session-token", "", expires=0)
+    return response
+
+
 @app.route('/get_account_details', methods=["GET"])
 def get_account_details():
     session_token = get_session_token(request)
@@ -97,6 +112,7 @@ def get_account_details():
 
         data = get_dynamodb("account_details")
         return data
+
 
 @app.route('/get_event_details', methods=["GET"])
 def get_event_details():
@@ -144,14 +160,15 @@ def create_event():
     else:
         return render_template("create_event.html")
 
+
 @app.route('/event_info=<Event_Title>', methods=["POST","GET"])
 def event_info(Event_Title):
-    session_token = get_session_token(request)
-    if session_token is None:
-        return redirect(url_for("login"))
-    
     event_data = get_dynamodb_item("event_details",Event_Title)
-    return render_template("event_info.html",data=event_data)
+    
+    reviews = get_reviews_alt(Event_Title).values()
+    print(reviews)
+
+    return render_template("event_info.html",data=event_data,reviews=reviews)
 
 
 @app.route('/search', methods=["POST","GET"])
@@ -168,6 +185,7 @@ def search():
     else:
         return render_template("home.html")
 
+
 @app.route('/search_type=<Type>', methods=["POST","GET"])
 def search_type(Type):
     session_token = get_session_token(request)
@@ -177,7 +195,6 @@ def search_type(Type):
     search_input = Type
     events_data = search_title_and_description(search_input)
     return render_template("home.html",data=events_data)
-
 
 
 @app.route('/book_ticket/<event_id>', methods = ["POST","GET"])
@@ -201,18 +218,6 @@ def book_ticket(event_id):
     else:
         return render_template("booking.html", content = event_id)
 
-
-@app.route('/logout', methods=["POST","GET"])
-def logout():
-    session_token = get_session_token(request)
-    if session_token is None:
-        return redirect(url_for("login"))
-
-    remove_token(session_token)
-
-    response = make_response(redirect(url_for("home")))
-    response.set_cookie("session-token", "", expires=0)
-    return response
 
 if __name__ == "__main__":
     app.run(debug=True, port=3500)
