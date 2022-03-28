@@ -29,3 +29,7 @@ def post_event_details(event_info):
 def check_event_details(event_info):
     # This is where you will check the event_info and whether they are valid. 
     return False
+
+
+
+    
