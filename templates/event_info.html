@@ -44,7 +44,7 @@
                 <h2>{{data["Event Title"]}}</h2>
                 <h3>{{data["Start Date"]}}</h3>
                 <h4>Tickets Available: {{data["Tickets Available"]}}</h4>
-                <form method="POST" action="/book_ticket/{{data["ID"]}}">  
+                <form method="POST" action="/event_info/{{data["Event Title"]}}/book_ticket">  
                     <input class="btnSubmit" type="submit" value="Book Tickets"></input>
                 </form>
                 <br>

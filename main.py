@@ -1,6 +1,6 @@
 from flask import render_template, request, redirect, url_for, Flask, session
 from auth import generate_token
-from get_dynamodb import get_dynamodb,get_dynamodb_item
+from get_dynamodb import get_dynamodb,get_dynamodb_item, update_event
 from post_to_account_dynamodb import post_account_details
 from register import check_username_exists
 from login import check_account_credentials
@@ -109,7 +109,7 @@ def create_event():
 
         # event_id += 1
 
-        event_info ['list_attendees'] = ""
+        event_info['list_attendees'] = []
         
         if check_event_details(event_info):
             pass
@@ -121,7 +121,7 @@ def create_event():
     else:
         return render_template("create_event.html")
 
-@app.route('/event_info=<Event_Title>', methods=["POST","GET"])
+@app.route('/event_info/<Event_Title>', methods=["POST","GET"])
 def event_info(Event_Title):
     
     event_data = get_dynamodb_item("event_details",Event_Title)
@@ -149,22 +149,35 @@ def search_type(Type):
 
 
 
-@app.route('/book_ticket/<event_id>', methods = ["POST","GET"])
-def book_ticket(event_id):
+@app.route('/event_info/<Event_Title>/book_ticket', methods = ["POST","GET"])
+def book_ticket(Event_Title):
+    
+    data = get_dynamodb_item("event_details","Free Beer")
+    
     if request.method == "POST":
         
-        ticket = {
-            "Pname": request.form['Pname'],
-            "Pemail":request.form['Pemail'],
-            "ticketQuantity":request.form['ticketQuantity'],
-            "cardNumber":request.form['cardNumber'],
-            "month":request.form['month'],
-            "year":request.form['year'],
-            "cvc":request.form['cvc'],        
-        }
-         
+        try:
+            checkout = {
+                "payment": request.form.get('payment'),
+                "cardholder": request.form.get('cardholder'),
+                "date": request.form.get('date'),
+                "verification": request.form.get('verification'),
+                "cardnumber":request.form.get('cardnumber')
+            }
+            
+            data['List of Attendees'].append(checkout['cardholder'])
+            update_event("event_details",data)
+            
+        finally:
+            
+            
+            #data['List of Attendees'].append("Ricky")
+            #update_event("event_details",data)
+            
+            return render_template("booking.html")
+            
     else:
-        return render_template("booking.html", content = event_id)
+        return render_template("booking.html")
 
 
 if __name__ == "__main__":
