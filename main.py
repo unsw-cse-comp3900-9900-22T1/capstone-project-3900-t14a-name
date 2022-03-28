@@ -1,6 +1,7 @@
+
 from flask import render_template, request, redirect, url_for, Flask, make_response, session
 from auth import generate_token, get_session_token
-from get_dynamodb import get_dynamodb, get_dynamodb_item,update_event
+from get_dynamodb import get_dynamodb, get_dynamodb_item,  update_event
 from post_to_account_dynamodb import post_account_details
 from register import check_username_exists
 from login import check_account_credentials
