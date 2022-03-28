@@ -1,4 +1,5 @@
 from lib2to3.pgen2.token import tok_name
+from operator import ge
 from re import S
 from flask import render_template, request, redirect, url_for, Flask, session
 from get_dynamodb import get_dynamodb
@@ -23,16 +24,26 @@ active_sessions = {}
 
 """
 """
+def get_session_token(request):
+    try:
+        return request.cookies.get('session-token')
+    except Exception:
+        return None
+
+
+"""
+"""
 def generate_token(user):
     now = datetime.now()
     token_id = secrets.token_urlsafe(64)
+    valid_until = now + timedelta(days=7)
     new_token = {
         "generated_timestamp":now,
-        "valid_until":now + timedelta(days=7),
+        "valid_until":valid_until,
         "username":user
     }
     active_sessions[token_id] = new_token
-    return active_sessions
+    return token_id, valid_until
 
 """
 """

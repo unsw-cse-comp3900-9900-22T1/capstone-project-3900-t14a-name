@@ -1,6 +1,6 @@
-from flask import render_template, request, redirect, url_for, Flask, session
-from auth import generate_token
-from get_dynamodb import get_dynamodb,get_dynamodb_item, update_event
+from flask import render_template, request, redirect, url_for, Flask, make_response, session
+from auth import generate_token, get_session_token
+from get_dynamodb import get_dynamodb, get_dynamodb_item,update_event
 from post_to_account_dynamodb import post_account_details
 from register import check_username_exists
 from login import check_account_credentials
@@ -63,9 +63,10 @@ def login():
         username = request.form['nm']
         plaintext = request.form['pw']
         if check_account_credentials(username,plaintext): # If an account like this exists, then it is succesfully logged in
-            token = generate_token(username)
-            #TODO: set token as cookie
-            return token
+            token_id, valid_until = generate_token(username)
+            response = make_response()
+            response.set_cookie("session-token", token_id, 604800, valid_until)
+            return response
         else:
             return redirect(url_for("login"))
 
@@ -131,6 +132,13 @@ def event_info(Event_Title):
 @app.route('/search', methods=["POST","GET"])
 def search():
 
+    session_token = get_session_token(request)
+    if session_token is None:
+        #put failure condition for no permissions here
+        return
+
+    if request.method == "POST":
+
 
     if request.method == "POST":
         search_input = request.form['search']
@@ -179,6 +187,9 @@ def book_ticket(Event_Title):
     else:
         return render_template("booking.html")
 
+@app.route('/book_trial', methods = ["POST","GET"])
+def book_trial():
+    return render_template("booking.html")
 
 if __name__ == "__main__":
     app.run(debug=True, port=3500)
