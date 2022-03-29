@@ -3,7 +3,7 @@ from auth import generate_token, get_session_token, remove_token, session_token_
 from get_dynamodb import get_dynamodb, get_dynamodb_item
 from post_to_account_dynamodb import post_account_details
 from register import check_username_exists
-from review import get_reviews_alt
+from review import get_reviews_alt, post_review
 from login import check_account_credentials
 from create_event import post_event_details, check_event_details
 from search import search_title_and_description,filter_event_types,search_all
@@ -166,7 +166,6 @@ def event_info(Event_Title):
     event_data = get_dynamodb_item("event_details",Event_Title)
     
     reviews = get_reviews_alt(Event_Title).values()
-    print(reviews)
 
     return render_template("event_info.html",data=event_data,reviews=reviews)
 
@@ -204,7 +203,6 @@ def book_ticket(event_id):
         return redirect(url_for("login"))
 
     if request.method == "POST":
-        
         ticket = {
             "Pname": request.form['Pname'],
             "Pemail":request.form['Pemail'],
@@ -217,6 +215,20 @@ def book_ticket(event_id):
          
     else:
         return render_template("booking.html", content = event_id)
+
+
+@app.route('/leave_review/<event_name>', methods = ["POST"])
+def leave_review(event_name):
+    session_token = get_session_token(request)
+    if session_token is None:
+        return redirect(url_for("login"))
+
+    if request.method == "POST":
+        print(request)
+        review = request.form['review_text']
+        post_review(session_token, event_name, review)
+
+    return redirect(url_for("home"))
 
 
 if __name__ == "__main__":

@@ -59,6 +59,16 @@
         background: #24423F;
         color: #fff;
     }
+    .form-content {
+        padding: 5%;
+        border: 1px solid #ced4da;
+        margin-bottom: 2%;
+    }
+
+    .form-control {
+        border-radius: 1.5rem;
+    }
+
 
     </style>
 
@@ -68,7 +78,7 @@
                 <h2>{{data["Event Title"]}}</h2>
                 <h3>{{data["Start Date"]}}</h3>
                 <h4>Tickets Available: {{data["Tickets Available"]}}</h4>
-                <form method="POST" action="/book_ticket/{{data["Event Title"]}}">  
+                <form method="GET" action="/book_ticket/{{data["Event Title"]}}">  
                     <input class="btnSubmit" type="submit" value="Book Tickets"></input>
                 </form>
                 <br>
@@ -80,8 +90,10 @@
 
         <br><br><br>
         <h1>&nbsp &nbsp Reviews</h1>
-
                 <form method="POST" action="/leave_review/{{data["Event Title"]}}">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="review_text" placeholder="Write your reveiew here *" />
+                    </div>
                     <input class="btnReview" type="submit" value="Leave a review"></input>
                 </form>
 
@@ -102,11 +114,11 @@
                 <text>{{item["reply_text"]}}</text>
                 {% endif %}
 
-                <form method="POST" action="/edit_review/{{data['Event Title']}}/{{item['username']}}">
+                <form method="GET" action="/edit_review/{{data['Event Title']}}/{{item['username']}}">
                     <input class="btnReply" type="submit" value="Edit this review"></input>
                 </form>
 
-                <form method="POST" action="/reply_review/{{data['Event Title']}}/{{item['username']}}">  
+                <form method="GET" action="/reply_review/{{data['Event Title']}}/{{item['username']}}">  
                     <input class="btnReply" type="submit" value="Reply to this review"></input>
                 </form>
                 </div>

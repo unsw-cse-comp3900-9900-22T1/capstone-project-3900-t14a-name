@@ -11,24 +11,39 @@ from get_dynamodb import get_dynamodb_item
 client = boto3.client('dynamodb',region_name='ap-southeast-2',aws_access_key_id='AKIAQPNE33YVPQHU7F64',aws_secret_access_key='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')
 
 '''
+Item={
+    'Event Title':{'S': event_title},
+    'Reviews':{'M': {
+        user:{'M': {
+            "review_text":{'S':review['review_text']},
+            "reply_posted":{'BOOL':review['reply_posted']},
+            "reply_text":{'S':review['reply_text']},
+            "posted_date":{'S':str(review['posted_date'])},
+            "edited_date":{'S':str(review['edited_date'])},
+            "reply_date":{'S':str(review['reply_date'])}
+            }}
+    }}
+}
+
 get_dynamodb_item("review_details","Free Beer")
 '''
 
 def post_review_to_db(event_title, user, review):
     check_output = client.update_item(TableName='review_details',
-    Item={
-        'Event Title':{'S': event_title},
-        'Reviews':{'M': {
-            user:{'M': {
+    Key={'Event Title':{'S': event_title}},
+    UpdateExpression="SET Reviews."+user+"=:r",
+     ExpressionAttributeValues ={
+        ':r':{
+            'M': {
                 "review_text":{'S':review['review_text']},
                 "reply_posted":{'BOOL':review['reply_posted']},
                 "reply_text":{'S':review['reply_text']},
                 "posted_date":{'S':str(review['posted_date'])},
                 "edited_date":{'S':str(review['edited_date'])},
                 "reply_date":{'S':str(review['reply_date'])}
-                }}
-        }}
-    }
+                }
+            }
+        }
     )
     return check_output
 
