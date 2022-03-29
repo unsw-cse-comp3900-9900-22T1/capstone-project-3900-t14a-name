@@ -103,7 +103,7 @@ def post_review(session_token, event_title, review_text):
 
     post_review_to_db(event_title, user, review)
 
-    return review
+    return True
 
 """
 """
