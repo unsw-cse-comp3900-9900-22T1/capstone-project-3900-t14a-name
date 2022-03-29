@@ -18,12 +18,14 @@ def post_account_details(username,salt,password):
 
 def post_account_to_dynamoDB(username,salt,password):
 
-    check_output = client.put_item(TableName='account_details',
+    empty_events_list = [] # When an user gets registered, an empty list is assigned.
 
+    check_output = client.put_item(TableName='account_details',
     Item={
         'Username':{'S':username},
         'Salt':{'S':salt},
         'Password':{'S':password},
+        'List of Events':{'L': empty_events_list}
     }
 
     )

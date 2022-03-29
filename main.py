@@ -105,9 +105,9 @@ def logout():
 
 @app.route('/get_account_details', methods=["GET"])
 def get_account_details():
-    session_token = get_session_token(request)
-    if session_token is None:
-        return redirect(url_for("login"))
+    # session_token = get_session_token(request)
+    # if session_token is None:
+    #     return redirect(url_for("login"))
 
     if request.method == "GET":
 
