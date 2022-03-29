@@ -26,9 +26,12 @@ active_sessions = {}
 """
 def get_session_token(request):
     try:
-        return request.cookies.get('session-token')
+        token = request.cookies.get('session-token')
     except Exception:
         return None
+    if check_token(token) == False:
+        return None
+    return token
 
 
 """

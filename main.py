@@ -1,12 +1,14 @@
 
 from flask import render_template, request, redirect, url_for, Flask, make_response, session
-from auth import generate_token, get_session_token
+from auth import generate_token, get_session_token, remove_token, session_token_to_user
 from get_dynamodb import get_dynamodb, get_dynamodb_item,  update_event
 from post_to_account_dynamodb import post_account_details
 from register import check_username_exists
+from review import get_reviews_alt, post_review
 from login import check_account_credentials
 from create_event import post_event_details, check_event_details
 from search import search_title_and_description,filter_event_types,search_all
+from password import check_password_strength
 import json
 import hashlib
 import secrets
@@ -20,12 +22,19 @@ app = Flask(__name__)
 
 @app.route('/', methods=["POST","GET"])
 def home():
+    session_token = get_session_token(request)
+    if session_token is None:
+        username = ""
+    else:
+        username = session_token_to_user(session_token)
 
     events_data = get_dynamodb("event_details")
     events_data = json.loads(events_data) # Converts it back to JSON so that html can format it properly
     events_data.sort(key=lambda x: datetime.datetime.strptime(x['Start Date'], '%d/%m/%Y')) # Sorts the Start Date from closest to far so thats the order it shows on the website
-    return render_template("home.html",data=events_data)
+
+    return render_template("home.html",data=events_data,username=username)
     # return events_data
+
 
 @app.route('/register', methods=["POST","GET"])
 def register():
@@ -38,7 +47,13 @@ def register():
         email = request.form['email']
         phone_number = request.form['phone']
 
-        if check_username_exists(username): # If username already exists then it redirects it again to registration page.
+        if check_username_exists(username): # If username already exists, fail registration
+            return redirect(url_for("register"))
+
+        if check_password_strength(password): # If password is too weak, fail registration
+            return redirect(url_for("register"))
+
+        if password != confirm_password: # type/copypaste passwords correctly please
             return redirect(url_for("register"))
 
         else: # Otherwise, It proceeds to the login page
@@ -65,7 +80,7 @@ def login():
         plaintext = request.form['pw']
         if check_account_credentials(username,plaintext): # If an account like this exists, then it is succesfully logged in
             token_id, valid_until = generate_token(username)
-            response = make_response()
+            response = make_response(redirect(url_for("home")))
             response.set_cookie("session-token", token_id, 604800, valid_until)
             return response
         else:
@@ -75,16 +90,36 @@ def login():
         return render_template("login.html")
 
 
+@app.route('/logout', methods=["POST","GET"])
+def logout():
+    session_token = get_session_token(request)
+    if session_token is None:
+        return redirect(url_for("login"))
+
+    remove_token(session_token)
+
+    response = make_response(redirect(url_for("home")))
+    response.set_cookie("session-token", "", expires=0)
+    return response
+
+
 @app.route('/get_account_details', methods=["GET"])
 def get_account_details():
+    session_token = get_session_token(request)
+    if session_token is None:
+        return redirect(url_for("login"))
 
     if request.method == "GET":
 
         data = get_dynamodb("account_details")
         return data
 
+
 @app.route('/get_event_details', methods=["GET"])
 def get_event_details():
+    session_token = get_session_token(request)
+    if session_token is None:
+        return redirect(url_for("login"))
 
     if request.method == "GET":
 
@@ -94,6 +129,9 @@ def get_event_details():
     
 @app.route('/create_event', methods=["POST","GET"])
 def create_event():
+    session_token = get_session_token(request)
+    if session_token is None:
+        return redirect(url_for("login"))
 
     if request.method == "POST":
 
@@ -123,20 +161,21 @@ def create_event():
     else:
         return render_template("create_event.html")
 
-@app.route('/event_info/<Event_Title>', methods=["POST","GET"])
+
+@app.route('/event_info=<Event_Title>', methods=["POST","GET"])
 def event_info(Event_Title):
-    
     event_data = get_dynamodb_item("event_details",Event_Title)
-    return render_template("event_info.html",data=event_data)
+    
+    reviews = get_reviews_alt(Event_Title).values()
+
+    return render_template("event_info.html",data=event_data,reviews=reviews)
 
 
 @app.route('/search', methods=["POST","GET"])
 def search():
-
     session_token = get_session_token(request)
     if session_token is None:
-        #put failure condition for no permissions here
-        return
+        return redirect(url_for("login"))
 
     if request.method == "POST":
         search_input = request.form['search']
@@ -146,8 +185,12 @@ def search():
     else:
         return render_template("home.html")
 
+
 @app.route('/search_type=<Type>', methods=["POST","GET"])
 def search_type(Type):
+    session_token = get_session_token(request)
+    if session_token is None:
+        return redirect(url_for("login"))
 
     search_input = Type
     events_data = search_title_and_description(search_input)
@@ -188,6 +231,20 @@ def book_ticket(Event_Title):
 @app.route('/book_trial', methods = ["POST","GET"])
 def book_trial():
     return render_template("booking.html")
+
+@app.route('/leave_review/<event_name>', methods = ["POST"])
+def leave_review(event_name):
+    session_token = get_session_token(request)
+    if session_token is None:
+        return redirect(url_for("login"))
+
+    if request.method == "POST":
+        print(request)
+        review = request.form['review_text']
+        post_review(session_token, event_name, review)
+
+    return redirect(url_for("home"))
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=3500)
