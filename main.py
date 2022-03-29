@@ -162,7 +162,7 @@ def create_event():
         return render_template("create_event.html")
 
 
-@app.route('/event_info=<Event_Title>', methods=["POST","GET"])
+@app.route('/event_info/<Event_Title>', methods=["POST","GET"])
 def event_info(Event_Title):
     event_data = get_dynamodb_item("event_details",Event_Title)
     
