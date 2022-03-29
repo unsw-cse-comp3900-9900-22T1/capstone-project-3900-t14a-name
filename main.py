@@ -249,7 +249,6 @@ def leave_review(event_name):
         return redirect(url_for("login"))
 
     if request.method == "POST":
-        print(request)
         review = request.form['review_text']
         post_review(session_token, event_name, review)
 
@@ -281,11 +280,10 @@ def reply_review_route(event_name, username):
     if session_token is None:
         return redirect(url_for("login"))
 
-    user = session_token_to_user(session_token)
-    review = get_review(event_name, user)["review_text"]
+    review = get_review(event_name, username)["review_text"]
 
     if request.method == "GET":
-        return render_template("reply_review.html",event_title=event_name, review=review)
+        return render_template("reply_review.html",event_title=event_name, review=review, user=username)
 
     if request.method == "POST":
         reply = request.form['reply_text']
