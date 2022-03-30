@@ -139,9 +139,6 @@ def search():
         return
 
     if request.method == "POST":
-
-
-    if request.method == "POST":
         search_input = request.form['search']
         events_data = search_title_and_description(search_input)
         return render_template("home.html",data=events_data)
