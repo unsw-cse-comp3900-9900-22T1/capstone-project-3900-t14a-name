@@ -34,7 +34,41 @@
         cursor: pointer;
         background: #24423F;
         color: #fff;
+      }
+
+      .btnReview {
+        margin-top: 1.5rem;
+        margin-left: 1.5rem;
+        border:none;
+        border-radius:2rem;
+        padding: 1%;
+        width: 30%;
+        cursor: pointer;
+        background: #24423F;
+        color: #fff;
+
+      }
+      .btnReply {
+        margin-top: 1.5rem;
+        margin-left: 1.5;
+        border:none;
+        border-radius:2rem;
+        padding: 1%;
+        width: 30%;
+        cursor: pointer;
+        background: #24423F;
+        color: #fff;
     }
+    .form-content {
+        padding: 5%;
+        border: 1px solid #ced4da;
+        margin-bottom: 2%;
+    }
+
+    .form-control {
+        border-radius: 1.5rem;
+    }
+
 
     </style>
 
@@ -44,7 +78,7 @@
                 <h2>{{data["Event Title"]}}</h2>
                 <h3>{{data["Start Date"]}}</h3>
                 <h4>Tickets Available: {{data["Tickets Available"]}}</h4>
-                <form method="POST" action="/book_ticket/{{data["ID"]}}">  
+                <form method="POST" action="/event_info/{{data["Event Title"]}}/book_ticket">  
                     <input class="btnSubmit" type="submit" value="Book Tickets"></input>
                 </form>
                 <br>
@@ -56,6 +90,43 @@
 
         <br><br><br>
         <h1>&nbsp &nbsp Reviews</h1>
+                <form method="POST" action="/leave_review/{{data["Event Title"]}}">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="review_text" placeholder="Write your reveiew here *" />
+                    </div>
+                    <input class="btnReview" type="submit" value="Leave a review"></input>
+                </form>
+
+                {% for item in reviews %}
+
+            <div class="Box">
+                <div class="Text_Box">
+                <h3>Review left by {{item["username"]}} on {{item["posted_date"]}}</h4>
+                <text>{{item["review_text"]}}</text>
+
+                {% if item["edited_date"] != "None": %}
+                <br>
+                <text>Edited on {{item["edited_date"]}}</text>
+                {% endif %}
+
+                {% if item["reply_posted"] == True: %}
+                <h4>Reply left by host on {{item["reply_date"]}}</h4>
+                <text>{{item["reply_text"]}}</text>
+                {% endif %}
+
+                <form method="GET" action="/edit_review/{{data['Event Title']}}/{{item['username']}}">
+                    <input class="btnReply" type="submit" value="Edit this review"></input>
+                </form>
+
+                <form method="GET" action="/reply_review/{{data['Event Title']}}/{{item['username']}}">  
+                    <input class="btnReply" type="submit" value="Reply to this review"></input>
+                </form>
+                </div>
+            </div>
+            
+            
+            {% endfor %}
+
     </body>
 
 

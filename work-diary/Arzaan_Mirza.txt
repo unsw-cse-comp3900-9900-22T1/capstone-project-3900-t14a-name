@@ -38,3 +38,9 @@ This week I continued where I left off last week which was majority coding all t
 due during the lab, our group tried to get everything done beforehand however we still had a few user stories left to at the end our of our sprint. We also 
 started the Sprint 2, in which the main objectives were to create the frontend for all the functionalities we individually implemented in Sprint 1. So I was just writing html/css/js code so that we have a nice frontend along with our backend.
 
+
+Week 6:
+
+This was the flex week, so just working on all the user stories this week. The main frontend has been built and there is a real structure to our 
+assignment as the routes are now established, we now know where all the pages will connect with one another. The aim is to finish all the functionality
+that are most urgent/required, and then in sprint 3 try to expand on those functionalities so they have advanced settings.
