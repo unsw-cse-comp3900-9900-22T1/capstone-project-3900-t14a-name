@@ -211,7 +211,10 @@ def event_info(Event_Title):
 
     event_data = get_dynamodb_item("event_details",Event_Title)
     
-    reviews = get_reviews_alt(Event_Title).values()
+    try:
+        reviews = get_reviews_alt(Event_Title).values()
+    except Exception:
+        reviews = []
 
     return render_template("event_info.html",user=user,data=event_data,reviews=reviews)
 
