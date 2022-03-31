@@ -11,7 +11,7 @@ from get_dynamodb import get_dynamodb, get_dynamodb_item,  update_event
 
 from post_to_account_dynamodb import post_account_details
 from register import check_username_exists
-from review import get_reviews_alt, post_review
+from review import edit_review, get_reviews_alt, post_review, get_review, reply_review
 from login import check_account_credentials
 from create_event import post_event_details, check_event_details
 from search import search_title_and_description,filter_event_types,search_all
@@ -203,18 +203,26 @@ def create_event():
 
 @app.route('/event_info/<Event_Title>', methods=["POST","GET"])
 def event_info(Event_Title):
+    session_token = get_session_token(request)
+    if session_token is None:
+        user = ""
+    else:
+        user = session_token_to_user(session_token)
+
     event_data = get_dynamodb_item("event_details",Event_Title)
     
     reviews = get_reviews_alt(Event_Title).values()
 
-    return render_template("event_info.html",data=event_data,reviews=reviews)
+    return render_template("event_info.html",user=user,data=event_data,reviews=reviews)
 
 
 @app.route('/search', methods=["POST","GET"])
 def search():
     session_token = get_session_token(request)
     if session_token is None:
-        return redirect(url_for("login"))
+        user = ""
+    else:
+        user = session_token_to_user(session_token)
 
     if request.method == "POST":
         search_input = request.form['search']
@@ -229,7 +237,9 @@ def search():
 def search_type(Type):
     session_token = get_session_token(request)
     if session_token is None:
-        return redirect(url_for("login"))
+        user = ""
+    else:
+        user = session_token_to_user(session_token)
 
     search_input = Type
     events_data = search_title_and_description(search_input)
@@ -278,12 +288,47 @@ def leave_review(event_name):
         return redirect(url_for("login"))
 
     if request.method == "POST":
-        print(request)
         review = request.form['review_text']
         post_review(session_token, event_name, review)
 
-    return redirect(url_for("home"))
+    return redirect("/event_info/" + event_name)
 
+
+@app.route('/edit_review/<event_name>', methods = ["GET", "POST"])
+def edit_review_route(event_name):
+    session_token = get_session_token(request)
+    if session_token is None:
+        return redirect(url_for("login"))
+
+    user = session_token_to_user(session_token)
+    old_review = get_review(event_name, user)["review_text"]
+
+    if request.method == "GET":
+        return render_template("edit_review.html",event_title=event_name, old_review=old_review)
+
+    if request.method == "POST":
+        new_review = request.form['new_review']
+        edit_review(session_token, event_name, user, new_review)
+
+    return redirect("/event_info/" + event_name)
+
+
+@app.route('/reply_review/<event_name>/<username>', methods = ["GET", "POST"])
+def reply_review_route(event_name, username):
+    session_token = get_session_token(request)
+    if session_token is None:
+        return redirect(url_for("login"))
+
+    review = get_review(event_name, username)["review_text"]
+
+    if request.method == "GET":
+        return render_template("reply_review.html",event_title=event_name, review=review, user=username)
+
+    if request.method == "POST":
+        reply = request.form['reply_text']
+        reply_review(session_token, event_name, username, reply)
+
+    return redirect("/event_info/" + event_name)
 
 if __name__ == "__main__":
     app.run(debug=True, port=3500)

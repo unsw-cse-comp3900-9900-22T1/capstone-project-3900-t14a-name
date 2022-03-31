@@ -1,7 +1,6 @@
 import json
 from tabnanny import check
 import requests
-import pprint
 import boto3
 from datetime import date
 
@@ -51,7 +50,6 @@ def post_review_to_db(event_title, user, review):
 """
 def get_reviews(event_title):
     reviews = get_dynamodb_item("review_details",event_title)['Reviews']
-    print(reviews)
     return reviews
 
 """
@@ -103,7 +101,7 @@ def post_review(session_token, event_title, review_text):
 
     post_review_to_db(event_title, user, review)
 
-    return review
+    return True
 
 """
 """
@@ -144,7 +142,7 @@ def reply_review(session_token, event_title, username, reply):
     review["reply_text"] = reply
     review["reply_posted"] = True
     review["reply_date"] = date.today()
-    post_review_to_db(event_title, user, review)
+    post_review_to_db(event_title, username, review)
 
     return True
 
