@@ -14,3 +14,4 @@ Completing the tasks assigned to me in sprint 1, e.g the search bar function. Th
 
 Week5
 Attend the progressive demon and discussed about what can be improved during the lab and start sprint 2.
+
