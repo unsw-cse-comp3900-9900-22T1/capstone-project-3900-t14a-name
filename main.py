@@ -156,9 +156,10 @@ def get_account_details():
 
 @app.route('/get_event_details', methods=["GET"])
 def get_event_details():
-    session_token = get_session_token(request)
-    if session_token is None:
-        return redirect(url_for("login"))
+    
+    #session_token = get_session_token(request)
+    #if session_token is None:
+    #    return redirect(url_for("login"))
 
     if request.method == "GET":
 
@@ -252,8 +253,8 @@ def search_type(Type):
 
 @app.route('/event_info/<Event_Title>/book_ticket', methods = ["POST","GET"])
 def book_ticket(Event_Title):
-    
-    data = get_dynamodb_item("event_details","Free Beer")
+    print("event = " + Event_Title)
+    data = get_dynamodb_item("event_details",Event_Title)
     
     if request.method == "POST":
         
