@@ -196,6 +196,12 @@ def book_ticket(event_id):
     else:
         return render_template("booking.html", content = event_id)
 
+# Booking page place holder       
+@app.route('/book_trial', methods = ["POST","GET"])
+def book_trial():
+    return render_template("booking.html")
+
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=3500)
