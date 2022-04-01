@@ -156,10 +156,9 @@ def get_account_details():
 
 @app.route('/get_event_details', methods=["GET"])
 def get_event_details():
-    
-    #session_token = get_session_token(request)
-    #if session_token is None:
-    #    return redirect(url_for("login"))
+#     session_token = get_session_token(request)
+#     if session_token is None:
+#         return redirect(url_for("login"))
 
     if request.method == "GET":
 
