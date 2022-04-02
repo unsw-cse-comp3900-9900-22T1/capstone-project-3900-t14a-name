@@ -330,8 +330,14 @@ def reply_review_route(event_name, username):
     if request.method == "POST":
         reply = request.form['reply_text']
         reply_review(session_token, event_name, username, reply)
-
+        
     return redirect("/event_info/" + event_name)
+  
+# Booking page place holder       
+@app.route('/book_trial', methods = ["POST","GET"])
+def book_trial():
+    return render_template("booking.html")
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=3500)
