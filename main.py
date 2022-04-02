@@ -280,10 +280,6 @@ def book_ticket(Event_Title):
     else:
         return render_template("booking.html")
 
-@app.route('/book_trial', methods = ["POST","GET"])
-def book_trial():
-    return render_template("booking.html")
-
 @app.route('/leave_review/<event_name>', methods = ["POST"])
 def leave_review(event_name):
     session_token = get_session_token(request)
