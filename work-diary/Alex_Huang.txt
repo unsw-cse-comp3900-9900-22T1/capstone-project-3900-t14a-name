@@ -8,10 +8,16 @@
 
 2022-03-13: Basic framework for reviews is up. Improved login to use hashes and not store passwords in plaintext.
 
-2022-03-14: Reviews can now be left, 
+2022-03-14: Reviews can now be left.
+
+2022-03-15: Authentication via session tokens works now. Cookies are set and read.
+
+2022-03-25: Passwords are now checked for not being in the top 1000 worst passwords of all time before users are allowed to register.
+
+2022-03-26: You can now log out. A bit of work on review frontend/database stuff.
+
+2022-03-27: Fixed backend review database stuff, made a frontend to show reviews.
 
 TODO: Customer review for events
-  Leave reviews
-  Reply to reviews
-  Read reviews
-
+  Frontend for reviews (leave_review and reply_review)
+  

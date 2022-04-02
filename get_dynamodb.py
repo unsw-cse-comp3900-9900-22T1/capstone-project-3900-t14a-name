@@ -29,7 +29,12 @@ def get_dynamodb_item(table_name,item):
     table = dynamodb.Table(table_name)
 
     response = table.get_item(
-        Key={ 'Event Title': item }
+        Key={'Event Title': item }
     )
 
     return response['Item']
+
+def update_event(table_name,data):
+    
+    table = dynamodb.Table(table_name)
+    table.put_item(Item = data)
