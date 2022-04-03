@@ -1,4 +1,5 @@
 
+from crypt import methods
 from click import confirm
 from flask import render_template, request, redirect, url_for, Flask, session
 from auth import generate_token
@@ -7,9 +8,9 @@ from get_dynamodb import get_dynamodb,get_dynamodb_item
 
 from flask import render_template, request, redirect, url_for, Flask, make_response, session
 from auth import generate_token, get_session_token, remove_token, session_token_to_user
-from get_dynamodb import get_dynamodb, get_dynamodb_item,  update_event
+from get_dynamodb import get_dynamodb, get_dynamodb_item, update_event, get_dynamodb_item_user
 
-from post_to_account_dynamodb import post_account_details
+from post_to_account_dynamodb import post_account_details, update_account_to_dynamoDB
 from register import check_username_exists
 from review import edit_review, get_reviews_alt, post_review, get_review, reply_review
 from login import check_account_credentials
@@ -333,6 +334,50 @@ def reply_review_route(event_name, username):
 @app.route('/book_trial', methods = ["POST","GET"])
 def book_trial():
     return render_template("booking.html")
+
+@app.route('/add_to_favourites/<favourite_event>',methods = ["POST","GET"])
+def add_to_favourites(favourite_event):
+
+    session_token = get_session_token(request)
+    if session_token is None:
+        user = ""
+    else:
+        user = session_token_to_user(session_token)
+
+    user_data = get_dynamodb_item_user(user)
+
+    # Checks if the event doesn't already exist in the favourites list
+    if favourite_event not in user_data['Favourites List']:
+        user_data['Favourites List'].append(favourite_event)
+
+    update_account_to_dynamoDB(user_data)
+    
+    return redirect(url_for("home"))
+
+@app.route('/favourites_list',methods = ["POST","GET"])
+def favourites_list():
+
+    session_token = get_session_token(request)
+    if session_token is None:
+        user = ""
+        return redirect(url_for("home"))
+    else:
+        user = session_token_to_user(session_token)
+
+    user_data = get_dynamodb_item_user(user)
+    user_favourites_list_titles = user_data['Favourites List']
+    events_data = get_dynamodb("event_details")
+    events_data = json.loads(events_data) # Converts it back to JSON so that html can format it properly
+    user_favourites_list_data = []
+
+    for event in events_data:
+
+        if event['Event Title'] in user_favourites_list_titles:
+            user_favourites_list_data.append(event)
+    
+
+    return render_template("favourites_list.html",data=user_favourites_list_data,username=user)
+
 
 
 if __name__ == "__main__":
