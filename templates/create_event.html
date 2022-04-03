@@ -27,7 +27,19 @@
         <p><input type="text" name="tickets_available" /></p>
         <p>Ticket Price:</p>
         <p><input type="text" name="ticket_price" /></p>
+        
+        <div id="chartDesigner"></div>
+        <script src="https://cdn-oc.seatsio.net/chart.js"></script>
+        
+        <script>
+            new seatsio.SeatingChartDesigner({
+                divId: 'chartDesigner',
+                secretKey: '906ca45f-f584-4a65-9392-220b268543da',
+                chartKey: res
+            }).render();
 
+           
+        </script> 
         <p><input type="submit" value="Create" /></p>
     </form>
 </body>

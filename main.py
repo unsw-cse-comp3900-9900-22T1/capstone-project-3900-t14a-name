@@ -20,6 +20,9 @@ from reset_password import confirm_user_detail, confirm_password, check_username
 
 from password import check_password_strength
 
+from seats import create_chart, create_seatsio_event
+
+
 import json
 import hashlib
 import secrets
@@ -187,7 +190,6 @@ def create_event():
         }
 
         # event_id += 1
-
         event_info['list_attendees'] = []
         
         if check_event_details(event_info):
@@ -195,6 +197,9 @@ def create_event():
 
         else:
             post_event_details(event_info)
+            #event = create_seatsio_event()
+            #print("Event: \n")
+            #print(event)
             return redirect(url_for("home"))
 
     else:
@@ -332,6 +337,11 @@ def reply_review_route(event_name, username):
         reply_review(session_token, event_name, username, reply)
 
     return redirect("/event_info/" + event_name)
+
+@app.route('/create_chart')
+def create_chart():
+    key = create_chart()
+    return key
 
 if __name__ == "__main__":
     app.run(debug=True, port=3500)
