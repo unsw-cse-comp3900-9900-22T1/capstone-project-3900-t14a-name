@@ -21,6 +21,9 @@ from reset_password import confirm_user_detail, confirm_password, check_username
 
 from password import check_password_strength
 
+from seats import create_chart, create_seatsio_event
+
+
 import json
 import hashlib
 import secrets
@@ -188,7 +191,6 @@ def create_event():
         }
 
         # event_id += 1
-
         event_info['list_attendees'] = []
         
         if check_event_details(event_info):
@@ -196,6 +198,9 @@ def create_event():
 
         else:
             post_event_details(event_info)
+            #event = create_seatsio_event()
+            #print("Event: \n")
+            #print(event)
             return redirect(url_for("home"))
 
     else:
@@ -253,8 +258,8 @@ def search_type(Type):
 
 @app.route('/event_info/<Event_Title>/book_ticket', methods = ["POST","GET"])
 def book_ticket(Event_Title):
-    
-    data = get_dynamodb_item("event_details","Free Beer")
+    print("event = " + Event_Title)
+    data = get_dynamodb_item("event_details",Event_Title)
     
     if request.method == "POST":
         
@@ -379,6 +384,11 @@ def favourites_list():
     return render_template("favourites_list.html",data=user_favourites_list_data,username=user)
 
 
+
+@app.route('/create_chart')
+def create_chart():
+    key = create_chart()
+    return key
 
 if __name__ == "__main__":
     app.run(debug=True, port=3500)
