@@ -34,6 +34,16 @@ def get_dynamodb_item(table_name,item):
 
     return response['Item']
 
+def get_dynamodb_item_user(item):
+
+    table = dynamodb.Table("account_details")
+
+    response = table.get_item(
+        Key={'Username': item }
+    )
+
+    return response['Item']
+
 def update_event(table_name,data):
     
     table = dynamodb.Table(table_name)
