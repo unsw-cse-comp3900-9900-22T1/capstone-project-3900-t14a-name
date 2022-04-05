@@ -1,0 +1,13 @@
+- Finished 75% of functionality.
+- Decent frontend base.
+- Fairly on track
+- Everyones working hard.
+- Good discussions.
+
+
+Things to improve upon:
+
+- Try completely finish a functionality on the frontend
+- Polish the frontend.
+- Create alerts when errors happen.
+- 
