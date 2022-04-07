@@ -1,5 +1,7 @@
-<<<<<<< HEAD
 <html>
+    <head> 
+
+    </head>
 <body>
     {% block content %}
     {% endblock content %}
@@ -29,150 +31,9 @@
         <p>Ticket Price:</p>
         <p><input type="text" name="ticket_price" /></p>
         
-        <div id="chartDesigner"></div>
-        <script src="https://cdn-oc.seatsio.net/chart.js"></script>
-        
-        <script>
-            new seatsio.SeatingChartDesigner({
-                divId: 'chartDesigner',
-                secretKey: '906ca45f-f584-4a65-9392-220b268543da',
-                chartKey: res
-            }).render();
-
-           
-        </script> 
         <p><input type="submit" value="Create" /></p>
     </form>
 </body>
+
+
 </html>
-=======
-
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <!------ Include the above in your HEAD tag ---------->
-    <head>
-    
-      <style>
-        .note {
-          text-align: center;
-          height: 80px;
-          background: -webkit-linear-gradient(left, #333738, #2E5E4E);
-          color: #fff;
-          font-weight: bold;
-          line-height: 80px;
-        }
-        .form-content {
-          padding: 5%;
-          border: 1px solid #ced4da;
-          margin-bottom: 2%;
-        }
-        .form-control{
-          border-radius:1.5rem;
-        }
-        .btnSubmit {
-          border:none;
-          border-radius:1.5rem;
-          padding: 1%;
-          width: 20%;
-          cursor: pointer;
-          background: #24423F;
-          color: #fff;
-        }
-        h2{
-          text-align: center;
-        }
-      </style>
-    </head>
-
-    <div class="container register-form">
-        <div class="form">
-          <div class="note">
-            <p>Please fill in following information to create your event</p>
-            <img class="mb-5" src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/c0840e59-db43-4681-ae7b-31a04dc4bc55/d7eqdvw-4e97ac92-e4b9-4498-9655-e4d612eb478b.png/v1/fill/w_1192,h_670,strp/random_logo_by_criticl_d7eqdvw-pre.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9OTAwIiwicGF0aCI6IlwvZlwvYzA4NDBlNTktZGI0My00NjgxLWFlN2ItMzFhMDRkYzRiYzU1XC9kN2VxZHZ3LTRlOTdhYzkyLWU0YjktNDQ5OC05NjU1LWU0ZDYxMmViNDc4Yi5wbmciLCJ3aWR0aCI6Ijw9MTYwMCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.X991O1jF5lTNZbbEoHEfoo6nlHEihBMHMIm5-uBCXcU" alt="" width="92" height="70">
-         
-          </div>
-      <br><br><br><br><br>
-      <h2>EventAus</h2>
-      <br>
-      
-      
-        <div class="form-content">
-          <form action="#" method="post">
-            <div class="row">
-      
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="title" placeholder="Event Title *"/>
-                    </div>
-                    <div class="form-group">
-                        
-                        <input type="text" class="form-control" name="description" placeholder="Event Description *"/>
-                    </div>
-                </div>
-      
-                <div class="col-md-6">
-                    <div class="form-group">
-                       
-                        <select class = "form-control" name="type" id="event_types">
-                            <option value="">Select Event Types *</option>
-                            <option value="Sports">Sports</option>
-                            <option value="Arts">Arts</option>
-                            <option value="Festivals">Festivals</option>
-                            <option value="Theatre">Theatre</option>
-                          </select>
-                    
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="venue" placeholder="Event Venue *"/>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="start_date" placeholder="Start Date *"/>
-                    </div>
-                    <div class="form-group">
-                        
-                        <input type="text" class="form-control" name="end_date" placeholder="End Date *"/>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="tickets_available" placeholder="Avaliable Tickets *"/>
-                    </div>
-                    <div class="form-group">
-                        
-                        <input type="text" class="form-control" name="ticket_price" placeholder="Ticket Price *"/>
-                    </div>
-                </div>
-
-
-            </div>
-      
-            </div>
-            <button class="btnSubmit" type="submit">Create!</button>
-          </form>
-          
-          
-        </div>
-      
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
->>>>>>> 62f78ea1a91bd2a74674737fb27465b1b1a3e567

@@ -1,7 +1,7 @@
 
-from crypt import methods
+#from crypt import methods
 from click import confirm
-from flask import render_template, request, redirect, url_for, Flask, session
+from flask import jsonify, render_template, request, redirect, url_for, Flask, session
 from auth import generate_token
 from get_dynamodb import get_dynamodb,get_dynamodb_item
 
@@ -21,7 +21,9 @@ from reset_password import confirm_user_detail, confirm_password, check_username
 
 from password import check_password_strength
 
-from seats import create_chart, create_seatsio_event
+from seats import create_chart, create_seatsio_event,list_charts
+
+from confirmation_email import confirm_booking
 
 
 import json
@@ -29,6 +31,8 @@ import hashlib
 import secrets
 import os
 import datetime
+
+
 
 global event_id
 event_id = 1
@@ -80,7 +84,7 @@ def register():
                 100000
             ).hex()
 
-            post_account_details(username,salt,password)
+            post_account_details(username,salt,password,email)
             return redirect(url_for("login"))
 
     else:
@@ -126,7 +130,7 @@ def reset_password():
                     bytes(salt,'utf-8'),
                     100000
                 ).hex()    
-                post_account_details(username,salt,password)####
+                post_account_details(username,salt,password,register_email)####
                 return redirect(url_for("login"))
             else: 
                 return redirect(url_for("reset_password"))
@@ -204,6 +208,7 @@ def create_event():
             return redirect(url_for("home"))
 
     else:
+        #chart_key = create_chart()
         return render_template("create_event.html")
 
 
@@ -255,7 +260,7 @@ def search_type(Type):
     return render_template("home.html",data=events_data)
 
 
-
+'''
 @app.route('/event_info/<Event_Title>/book_ticket', methods = ["POST","GET"])
 def book_ticket(Event_Title):
     print("event = " + Event_Title)
@@ -272,19 +277,29 @@ def book_ticket(Event_Title):
                 "cardnumber":request.form.get('cardnumber')
             }
             
-            data['List of Attendees'].append(checkout['cardholder'])
-            update_event("event_details",data)
+            if checkout is not None:
+                session_token = get_session_token(request)
+                if session_token is None:
+                    user = ""
+                else:
+                    user = session_token_to_user(session_token)
+                    data['List of Attendees'].append(checkout['cardholder'])
+                    user_data = get_dynamodb_item_user(user)
+                    user_data['List of Events'].append(Event_Title)
+                    update_event("event_details",data)
+                    update_event("account_details",user_data)
             
         finally:
             
             
-            #data['List of Attendees'].append("Ricky")
-            #update_event("event_details",data)
+            data['List of Attendees'].append("Ricky")
+            update_event("event_details",data)
             
-            return render_template("booking.html")
+            return render_template("booking.html" )
             
     else:
         return render_template("booking.html")
+'''
 
 @app.route('/leave_review/<event_name>', methods = ["POST"])
 def leave_review(event_name):
@@ -385,10 +400,52 @@ def favourites_list():
 
 
 
-@app.route('/create_chart')
-def create_chart():
-    key = create_chart()
-    return key
+@app.route('/event_info/<Event_Title>/book_ticket',methods = ["POST","GET"])
+def book_event(Event_Title):
+    event = get_dynamodb_item("event_details",Event_Title)
+    
+    if request.method == "POST":
+        reply = request.form.get('seat')
+        print(reply)   
+        return render_template("book_event.html")
+    
+    if request.method == "GET":
+        return render_template("book_event.html")
+
+
+@app.route('/event_info/<Event_Title>/booking.html',methods = ["POST","GET"])
+def pay_event(Event_Title):
+    data = get_dynamodb_item("event_details",Event_Title)
+    
+    if request.method == "POST":     
+        try:
+            checkout = {
+                "payment": request.form.get('payment'),
+                "cardholder": request.form.get('cardholder'),
+                "date": request.form.get('date'),
+                "verification": request.form.get('verification'),
+                "cardnumber":request.form.get('cardnumber')
+            }
+            
+            if checkout is not None:
+                session_token = get_session_token(request)
+                if session_token is None:
+                    user = ""
+                else:
+                    user = session_token_to_user(session_token)
+                    data['List of Attendees'].append(checkout['cardholder'])
+                    user_data = get_dynamodb_item_user(user)
+                    user_data['List of Events'].append(Event_Title)
+                    update_event("event_details",data)
+                    update_event("account_details",user_data)
+                    confirm_booking(user_data['Email'],Event_Title)
+            
+        finally:
+            
+            return render_template("booking.html" )
+            
+    else:
+        return render_template("booking.html")
 
 if __name__ == "__main__":
     app.run(debug=True, port=3500)

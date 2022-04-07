@@ -6,9 +6,9 @@ import boto3
 client = boto3.client('dynamodb',region_name='ap-southeast-2',aws_access_key_id='AKIAQPNE33YVPQHU7F64',aws_secret_access_key='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')
 
 
-def post_account_details(username,salt,password):
+def post_account_details(username,salt,password,email):
 
-    check_output = post_account_to_dynamoDB(username,salt,password)
+    check_output = post_account_to_dynamoDB(username,salt,password,email)
 
     # Checks if the username & password have been posted succesfully
     if check_output['ResponseMetadata']['HTTPStatusCode'] == 200:
@@ -17,7 +17,7 @@ def post_account_details(username,salt,password):
         return False
 
 
-def post_account_to_dynamoDB(username,salt,password):
+def post_account_to_dynamoDB(username,salt,password,email):
 
     # When an user gets registered, an empty list is assigned.
     empty_events_list = [] 
@@ -29,7 +29,8 @@ def post_account_to_dynamoDB(username,salt,password):
         'Salt':{'S':salt},
         'Password':{'S':password},
         'List of Events':{'L': empty_events_list},
-        'Favourites List':{'L': empty_favourites_list}
+        'Favourites List':{'L': empty_favourites_list},
+        'Email' : {'S': email}
     }
 
     )
@@ -47,6 +48,8 @@ def update_account_to_dynamoDB(item):
             'Salt':item['Salt'],
             'List of Events':item['List of Events'],
             'Password':item['Password'],
-            'Favourites List': item['Favourites List']
+            'Favourites List': item['Favourites List'],
+            'Email': item['Email']
         }
     )
+
