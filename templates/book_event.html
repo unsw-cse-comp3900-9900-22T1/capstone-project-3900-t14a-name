@@ -311,7 +311,7 @@ ol {
     </div>
 
     
-  <form action = "booking.html" method = "POST">
+  
     <div class="plane">
       <div class="cockpit">
         Choose your seat
@@ -319,6 +319,7 @@ ol {
       <div class="exit exit--front fuselage">
         
       </div>
+      <form action = "booking.html" method = "POST">
       <ol class="cabin fuselage">
         <li class="row row--1">
           <ol class="seats" type="A">
@@ -606,13 +607,20 @@ ol {
       </div>
     </div>
     
-
     <div class="panel-footer">
         <button class="btn back-btn">Cancel</button>
-        <button type = "submit" class="btn next-btn">Next</button>
+        <button onclick="myFunction()" type = "submit" class="btn next-btn">Next</button>
 
 
     </div>
+
+    <script>
+      function myFunction() {
+        var x = document.getElementById("1A").value;
+        console.log(x)
+      }
+      </script>
+
   </form>
   
   </body>
