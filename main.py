@@ -21,7 +21,7 @@ from reset_password import confirm_user_detail, confirm_password, check_username
 
 from password import check_password_strength
 
-from seats import create_chart, create_seatsio_event,list_charts
+
 
 from confirmation_email import confirm_booking
 
