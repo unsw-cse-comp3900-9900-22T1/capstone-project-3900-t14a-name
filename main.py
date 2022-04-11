@@ -405,14 +405,14 @@ def book_event(Event_Title):
     event = get_dynamodb_item("event_details",Event_Title)
     
     if request.method == "POST":
-        reply = request.form.get('seat')
-        print(reply)   
-        return render_template("book_event.html")
+        print(request.args.getlist('seat'))
+        return render_template("book_event.html")      
     
-    if request.method == "GET":
+    elif request.method == "GET":
         return render_template("book_event.html")
 
 
+     
 @app.route('/event_info/<Event_Title>/booking.html',methods = ["POST","GET"])
 def pay_event(Event_Title):
     data = get_dynamodb_item("event_details",Event_Title)

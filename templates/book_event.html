@@ -106,12 +106,12 @@ html {
   font-size: 16px;
 }
 
-.plane {
+.Map {
   margin: 20px auto;
   max-width: 300px;
 }
 
-.cockpit {
+.SeatingMap {
   height: 250px;
   position: relative;
   overflow: hidden;
@@ -119,7 +119,7 @@ html {
   border-bottom: 5px solid #d8d8d8;
 }
 
-.cockpit h1 {
+.SeatingMap h1 {
   width: 60%;
   margin: 100px auto 35px auto;
 }
@@ -148,7 +148,7 @@ html {
   right: 0;
 }
 
-.fuselage {
+.Arrange {
   border-right: 5px solid #d8d8d8;
   border-left: 5px solid #d8d8d8;
 }
@@ -312,19 +312,19 @@ ol {
 
     
   
-    <div class="plane">
-      <div class="cockpit">
+    <div class="Map">
+      <div class="SeatingMap">
         Choose your seat
       </div>
-      <div class="exit exit--front fuselage">
+      <div class="exit exit--front Arrange">
         
       </div>
       <form action = "booking.html" method = "POST">
-      <ol class="cabin fuselage">
+      <ol class="Arrange">
         <li class="row row--1">
           <ol class="seats" type="A">
             <li class="seat">
-              <input type="checkbox" id="1A" name = 'seat'/>
+              <input type="checkbox" id="1A" name = 'seat' />
               <label for="1A">1A</label>
             </li>
             <li class="seat">
@@ -602,7 +602,7 @@ ol {
           </ol>
         </li>
       </ol>
-      <div class="exit exit--back fuselage">
+      <div class="exit exit--back Arrange">
         
       </div>
     </div>
@@ -613,13 +613,6 @@ ol {
 
 
     </div>
-
-    <script>
-      function myFunction() {
-        var x = document.getElementById("1A").value;
-        console.log(x)
-      }
-      </script>
 
   </form>
   
