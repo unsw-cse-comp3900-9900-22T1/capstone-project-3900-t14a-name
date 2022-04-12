@@ -45,13 +45,17 @@ def home():
     if session_token is None:
         username = ""
     else:
+        session_alive = True
         username = session_token_to_user(session_token)
 
     events_data = get_dynamodb("event_details")
     events_data = json.loads(events_data) # Converts it back to JSON so that html can format it properly
     events_data.sort(key=lambda x: datetime.datetime.strptime(x['Start Date'], '%d/%m/%Y')) # Sorts the Start Date from closest to far so thats the order it shows on the website
 
-    return render_template("home.html",data=events_data,username=username)
+    if session_token:
+        return render_template("logged_in_home.html",data=events_data,username=username)
+    else:
+        return render_template("home.html",data=events_data,username=username)
     # return events_data
 
 
@@ -236,12 +240,15 @@ def search():
     if session_token is None:
         user = ""
     else:
+        session_alive = True
         user = session_token_to_user(session_token)
 
     if request.method == "POST":
         search_input = request.form['search']
         events_data = search_title_and_description(search_input)
-        return render_template("home.html",data=events_data)
+
+        if session_alive:
+            return render_template("logged_in_home.html",data=events_data)
 
     else:
         return render_template("home.html")
@@ -253,11 +260,17 @@ def search_type(Type):
     if session_token is None:
         user = ""
     else:
+        session_alive = True 
         user = session_token_to_user(session_token)
 
     search_input = Type
     events_data = search_title_and_description(search_input)
-    return render_template("home.html",data=events_data)
+
+    if session_alive:
+        return render_template("logged_in_home.html",data=events_data)
+    else:
+        return render_template("home.html",data=events_data)
+
 
 
 '''
@@ -373,6 +386,25 @@ def add_to_favourites(favourite_event):
     update_account_to_dynamoDB(user_data)
     
     return redirect(url_for("home"))
+
+@app.route('/remove_from_favourites/<favourite_event>',methods = ["POST","GET"])
+def remove_from_favourites(favourite_event):
+
+    session_token = get_session_token(request)
+    if session_token is None:
+        user = ""
+    else:
+        user = session_token_to_user(session_token)
+
+    user_data = get_dynamodb_item_user(user)
+
+    # Checks if the event doesn't already exist in the favourites list
+    user_data['Favourites List'].remove(favourite_event)
+
+    update_account_to_dynamoDB(user_data)
+    
+    return redirect(url_for("favourites_list"))
+
 
 @app.route('/favourites_list',methods = ["POST","GET"])
 def favourites_list():
