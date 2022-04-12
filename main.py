@@ -405,7 +405,7 @@ def book_event(Event_Title):
     event = get_dynamodb_item("event_details",Event_Title)
     
     if request.method == "POST":
-        print(request.args.getlist('seat'))
+        print(request.form.getlist('seat'))
         return render_template("book_event.html")      
     
     elif request.method == "GET":
