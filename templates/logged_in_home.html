@@ -1,9 +1,7 @@
-{% extends "base.html" %}
+{% extends "logged_in_base.html" %}
 {% block content_block %}
 
     <br><br><br>
-    <h1>{{username}} - Favourites</h1>
-    <br>
     {% for item in data %}
 
         <div class = "Box">
@@ -17,8 +15,8 @@
                     <input class="btnSubmit" type="submit" value="Book Tickets"></input>
                 </form>
                 
-                <form method="POST" action="/remove_from_favourites/{{item["Event Title"]}}">  
-                    <input class="btnFavourite" type="submit" value="Remove - Favourites"></input>
+                <form method="POST" action="/add_to_favourites/{{item["Event Title"]}}">  
+                    <input class="btnFavourite" type="submit" value="Add to favourites"></input>
                 </form>
                 <br>
                 <text>{{item["Description"]}}</text>
