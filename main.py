@@ -3,7 +3,7 @@
 from click import confirm
 from flask import jsonify, render_template, request, redirect, url_for, Flask, session
 from auth import generate_token
-from get_dynamodb import get_dynamodb,get_dynamodb_item
+from get_dynamodb import get_dynamodb,get_dynamodb_item,delete_event
 
 
 from flask import render_template, request, redirect, url_for, Flask, make_response, session
@@ -23,7 +23,7 @@ from password import check_password_strength
 
 
 
-from confirmation_email import confirm_booking
+from confirmation_email import confirm_booking,cancellation
 
 
 import json
@@ -465,8 +465,9 @@ def pay_event(Event_Title):
                     user = ""
                 else:
                     user = session_token_to_user(session_token)
-                    data['List of Attendees'].append(checkout['cardholder'])
+                    #data['List of Attendees'].append(checkout['cardholder'])
                     user_data = get_dynamodb_item_user(user)
+                    data['List of Attendees'].append(user_data['Username'])
                     user_data['List of Events'].append(Event_Title)
                     update_event("event_details",data)
                     update_event("account_details",user_data)
@@ -479,5 +480,30 @@ def pay_event(Event_Title):
     else:
         return render_template("booking.html")
 
+
+@app.route('/<Event_Title>/cancel',methods = ["GET"])
+def cancel_event(Event_Title):
+    
+    if request.method == "GET":
+        data = get_dynamodb_item("event_details",Event_Title)
+        for user in data['List of Attendees']:
+            userdata = get_dynamodb_item_user(user)
+            cancellation(userdata['Email'],Event_Title)
+            userdata['List of Events'].remove(Event_Title)
+            update_event("account_details",userdata)
+            
+    delete_event(Event_Title)
+    
+    return json.dumps(userdata)  
+        #return json.dumps(data['List of Attendees'])
+
+@app.route('/<Event_Title>/list',methods = ["GET"])
+def list_event(Event_Title):
+    
+    if request.method == "GET":
+        data = get_dynamodb_item("event_details",Event_Title)
+        return json.dumps(data['List of Attendees'])  
+    
+    
 if __name__ == "__main__":
     app.run(debug=True, port=3500)

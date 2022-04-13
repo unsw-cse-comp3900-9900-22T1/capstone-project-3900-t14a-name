@@ -26,3 +26,27 @@ def confirm_booking(sendee,event):
         print ("Email sent successfully!")
     except Exception as ex:
         print ("Something went wrong….",ex)
+
+def cancellation(sendee,event):
+    sent_from = gmail_user
+    to = sendee
+    subject = 'Event Cancellation'
+    body = 'This email is to confirm that an event you have booked a ticket for has been cancelled' + event
+
+    email_text = """\
+    From: %s
+    To: %s
+    Subject: %s
+
+    %s
+    """ % (sent_from, ", ".join(to), subject, body)
+
+    try:
+        smtp_server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+        smtp_server.ehlo()
+        smtp_server.login(gmail_user, gmail_password)
+        smtp_server.sendmail(sent_from, to, email_text)
+        smtp_server.close()
+        print ("Email sent successfully!")
+    except Exception as ex:
+        print ("Something went wrong….",ex)
