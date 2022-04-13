@@ -44,7 +44,18 @@ def get_dynamodb_item_user(item):
 
     return response['Item']
 
+
+
+
 def update_event(table_name,data):
     
     table = dynamodb.Table(table_name)
     table.put_item(Item = data)
+    
+
+def delete_event(data):
+    table = dynamodb.Table("event_details")
+    response = table.delete_item(
+        Key = {'Event Title': data} 
+    )
+    print(response)
