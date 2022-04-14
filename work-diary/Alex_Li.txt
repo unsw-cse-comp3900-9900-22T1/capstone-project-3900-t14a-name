@@ -16,7 +16,12 @@ Week5
 Attend the progressive demon and discussed about what can be improved during the lab and start sprint 2.
 
 Week6 
-Start and complete the retrospective report A and hand to scrum master for proof reading, continue tasks assigned in Jira and update the frontend of search with scrum master
+Start and complete the retrospective report A with teams and hand to scrum master for proof reading, continue tasks assigned in Jira and update the frontend of search with scrum master
 
 Week7
-Continue the task, update the frontend Create Event
+Continue the task, update the frontends
+
+Week8
+Complete retro with team members and hand to scrum master, finalise the tasks on for the last sprint, working on the last sprint, started final report.
+
+Week9
