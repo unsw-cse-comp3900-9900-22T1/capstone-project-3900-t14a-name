@@ -2,7 +2,7 @@
 {% block content_block %}
 
     <br><br><br>
-    <h1>{{username}} - Favourites</h1>
+    <h1>{{username}} - Booked Events</h1>
     <br>
     {% for item in data %}
 
@@ -17,9 +17,6 @@
                     <input class="btnSubmit" type="submit" value="Book Tickets"></input>
                 </form>
                 
-                <form method="POST" action="/remove_from_favourites/{{item["Event Title"]}}">  
-                    <input class="btnFavourite" type="submit" value="Remove - Favourites"></input>
-                </form>
                 <br>
                 <text>{{item["Description"]}}</text>
                 <br><br><br>

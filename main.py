@@ -1,5 +1,6 @@
 
 #from crypt import methods
+from operator import attrgetter
 from click import confirm
 from flask import jsonify, render_template, request, redirect, url_for, Flask, session
 from auth import generate_token
@@ -183,7 +184,7 @@ def create_event():
     session_token = get_session_token(request)
     if session_token is None:
         return redirect(url_for("login"))
-
+    user = session_token_to_user(session_token)
     if request.method == "POST":
 
         event_info = {
@@ -196,6 +197,7 @@ def create_event():
             "end_date": request.form['end_date'],
             "tickets_available": request.form['tickets_available'],
             "ticket_price": request.form['ticket_price'],
+            "host": user,
         }
 
         # event_id += 1
@@ -496,6 +498,94 @@ def cancel_event(Event_Title):
     
     return json.dumps(userdata)  
         #return json.dumps(data['List of Attendees'])
+
+
+@app.route('/recommendations', methods = ["POST","GET"])
+def recommendations():
+    
+    session_token = get_session_token(request)
+    if session_token is None:
+        user = ""
+        return redirect(url_for("login"))
+    else:
+        user = session_token_to_user(session_token)
+    
+    event_data = get_dynamodb("event_details")
+    event_data = json.loads(event_data)
+
+    list_of_attended_events = []
+
+
+    # Saves all events that the user attends
+    list_of_booked_hosts = []
+    for event in event_data:
+
+        if user in event["List of Attendees"]:
+            list_of_attended_events.append(event)
+
+
+    # Finds common events for recommendations
+    list_of_recommendated_events = []
+    for attended_event in list_of_attended_events:
+
+        for event in event_data:
+            
+            if event in list_of_recommendated_events:
+                continue
+
+            if attended_event['Event Title'] == event['Event Title']:
+                continue
+            
+            if attended_event['Type'] == event['Type']:
+                list_of_recommendated_events.append(event)
+                continue
+
+            if event['Host'] == attended_event['Host']:
+                list_of_recommendated_events.append(event)
+
+            event_description_words = set(event['Description'].split())
+            attended_event_description_words = set(attended_event['Description'].split())
+            common_words = event_description_words & attended_event_description_words
+            if len(common_words) > 2:
+                list_of_recommendated_events.append(event)
+
+    # Removes common events that are already booked
+    list_of_new_recommendated_events = []
+    for event in list_of_recommendated_events:
+
+        if event not in list_of_attended_events:
+            list_of_new_recommendated_events.append(event)
+
+    return render_template("recommendated_events.html",data=list_of_new_recommendated_events,username=user)
+    
+
+
+@app.route('/list_of_booked_events', methods = ["POST","GET"])
+def list_of_booked_events():
+
+    session_token = get_session_token(request)
+    if session_token is None:
+        user = ""
+        return redirect(url_for("login"))
+    else:
+        user = session_token_to_user(session_token)
+    
+    event_data = get_dynamodb("event_details")
+    event_data = json.loads(event_data)
+
+    list_of_attended_events = []
+
+    # Saves all events that the user attends
+    for event in event_data:
+
+        if user in event["List of Attendees"]:
+            list_of_attended_events.append(event)
+
+    return render_template("attended_events.html",data=list_of_attended_events,username=user)
+
+
+
+
 
 @app.route('/<Event_Title>/list',methods = ["GET"])
 def list_event(Event_Title):
