@@ -18,7 +18,8 @@ def post_event_details(event_info):
         'Tickets Available': {'S': event_info['tickets_available']},
         'Ticket Price': {'S': event_info['ticket_price']},
         'List of Attendees': {'L': event_info['list_attendees']},
-        'Seats' : { 'M': create_seats()}
+        'Seats' : { 'M': create_seats()},
+        'Host': {'S': event_info['host']}
         }
     )
 
