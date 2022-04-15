@@ -51,3 +51,15 @@ Week 7:
 This week we just continued on working on the sprint. A lot of the routes are now connecting to each other and we have established a strong base to
 further expand on. A lot of the functionality is now working however i still need to get started on working on the special two features of this website
 that we hope to implement.
+
+Week 8:
+
+Continuing to work on the sprint and trying to get as many things as done as possible. This week we just continued on working on the sprint.
+A lot of the routes are now connecting to each other and we have established a strong base tofurther expand on. A lot of the functionality is 
+now working however i still need to get started on working on the special two features of this website that we hope to implement.
+
+
+Week 9:
+
+Continuing off from last week, still have a lot of things to do on the backend and need to massively improve the frontend. A lot of the functionality is 
+now working however i still need to get started on working on one of the special features of this website that we hope to implement.
