@@ -233,7 +233,10 @@ def event_info(Event_Title):
     except Exception:
         reviews = []
 
-    return render_template("event_info.html",user=user,data=event_data,reviews=reviews)
+    all_events_data = get_dynamodb("event_details")
+    all_events_data = json.loads(all_events_data) # Converts it back to JSON so that html can format it properly
+    all_events_data.remove(event_data)
+    return render_template("event_info.html",user=user,data=event_data,all_events_data=all_events_data,reviews=reviews)
 
 
 @app.route('/search', methods=["POST","GET"])

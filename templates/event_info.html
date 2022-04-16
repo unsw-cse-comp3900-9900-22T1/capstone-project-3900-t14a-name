@@ -9,12 +9,14 @@
       }
 
       .Box {
+        border: solid;
+        border-color: black;
         margin: 0rem;
         display: inline-table;
         flex-direction: column;
         margin-left: 1.5rem;
         margin-top: 1rem;
-        width: 900px;
+        width: 700px;
         align-content: center;
         height: 400px;
         background-color: white;
@@ -22,6 +24,31 @@
         padding-bottom: 0rem;
         border-radius: 0.5rem;
         cursor: pointer;
+      }
+
+      .Box3 {
+        border: solid;
+        border-color: black;
+        margin: 0rem;
+        display: inline-table;
+        flex-direction: column;
+        margin-left: 1.5rem;
+        margin-top: 1rem;
+        margin-right: 1px;
+        width: 600px;
+        align-content: center;
+        height: 400px;
+        background-color: lightblue;
+        padding: 0.1rem;
+        padding-bottom: 0rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+      }
+
+      .Box2{
+          position:absolute;
+          margin-left: 755px;
+          margin-top: -400px;
       }
 
       .btnSubmit {
@@ -73,7 +100,7 @@
     </style>
 
     <body>
-        <div class = "Box">
+        <div class = "Box4">
             <div class = "Text_Box">
                 <h2>{{data["Event Title"]}}</h2>
                 <h3>{{data["Start Date"]}}</h3>
@@ -88,18 +115,53 @@
             </div>
         </div>
 
-        <br><br><br>
-        <h1>&nbsp &nbsp Reviews</h1>
-                <form method="POST" action="/leave_review/{{data["Event Title"]}}">
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="review_text" placeholder="Write your reveiew here *" />
+        <div class = "Box2">
+            <br> <br>
+            <h2>&nbsp &nbsp Other Events:</h2>
+            {% for item in all_events_data %}
+                <div class = "Box3">
+                    <div class = "Text_Box">
+                        <h2>{{item["Event Title"]}}</h2>
+                        <h3>{{data["Start Date"]}}</h3>
+                        <h4>Tickets Available: {{data["Tickets Available"]}}</h4>
+                        <form method="POST" action="/event_info/{{data["Event Title"]}}/book_ticket">  
+                            <input class="btnSubmit" type="submit" value="Book Tickets"></input>
+                        </form>
+                        <br>
+                        <text>{{data["Description"]}}</text>
+                        <br><br><br><br><br><br>
+                        <h3>Location: {{data["Venue"]}}</h3>
                     </div>
-                    <input class="btnReview" type="submit" value="Leave a review"></input>
-                </form>
+                </div>
+            {% endfor %}
+        </div>
+
+        <br><br><br>
+
+        <div class="TextBox2">
+        <h1>&nbsp &nbsp Reviews</h1>
+                
+                    <form method="POST" action="/leave_review/{{data["Event Title"]}}">
+                        <!-- <div class="form-group">
+                            <input type="text" class="form-control" name="review_text" placeholder="Write your reveiew here *" />
+                        </div> -->
+                        &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+                        <form action="//www.html.am/html-codes/textboxes/submitted.cfm">
+                            <textarea name="review_text" cols="50" rows="5"> Leave a review...
+                            
+                            </textarea>
+                            <br />
+                            <input class="btnReview" type="submit" value="Leave a review"></input>
+                            </form>
+                            
+                        
+                    </form>
+        </div>
 
                 {% for item in reviews %}
 
             <div class="Box">
+                
                 <div class="Text_Box">
                 <h3>Review left by {{item["username"]}} on {{item["posted_date"]}}</h4>
                 <text>{{item["review_text"]}}</text>
