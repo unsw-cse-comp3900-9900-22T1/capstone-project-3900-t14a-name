@@ -51,3 +51,69 @@ def filter_event_types(event_type):
             list_of_related_events.append(each_event)
 
     return list_of_related_events
+
+
+def search_by_location(search_input):
+
+    if search_input.isnumeric():
+        events_data = search_by_postcode(search_input)
+    else:
+        events_data = search_by_suburb(search_input)
+
+    return events_data
+
+def search_by_postcode(search_input):
+
+    postcode_integer = int(search_input)
+    min_event_postcode = postcode_integer - 15
+    max_event_postcode = postcode_integer + 15
+
+    events_data = get_dynamodb("event_details")
+    events_data = json.loads(events_data)
+    list_of_related_events = []
+
+    for event in events_data:
+        
+        event_postcode = int(event['Postcode'])
+
+        if event_postcode >= min_event_postcode and event_postcode <= max_event_postcode:
+            list_of_related_events.append(event)
+
+
+    return list_of_related_events
+
+
+
+
+def search_by_suburb(search_input):
+
+    f = open('au_postcodes.json')
+    postcode_data = json.load(f)
+
+    # Find the postcode of the search_input
+    for each_suburb in postcode_data:
+
+        if each_suburb['place_name'].lower() == search_input.lower() and each_suburb['state_code'] == "NSW":
+            suburb_postcode = each_suburb['postcode']
+
+    if suburb_postcode is None:
+        return []
+        
+    # Find the nearest suburbs
+    postcode_integer = int(suburb_postcode)
+    min_event_postcode = postcode_integer - 15
+    max_event_postcode = postcode_integer + 15
+
+    events_data = get_dynamodb("event_details")
+    events_data = json.loads(events_data)
+    list_of_related_events = []
+
+    for event in events_data:
+        
+        event_postcode = int(event['Postcode'])
+
+        if event_postcode >= min_event_postcode and event_postcode <= max_event_postcode:
+            list_of_related_events.append(event)
+
+
+    return list_of_related_events

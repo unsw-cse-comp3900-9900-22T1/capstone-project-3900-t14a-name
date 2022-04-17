@@ -63,20 +63,14 @@
                 </div>
       
                 <div class="col-md-6">
-                    <div class="form-group">
-                       
-                        <select class = "form-control" name="type" id="event_types">
-                            <option value="">Select Event Types *</option>
-                            <option value="Sports">Sports</option>
-                            <option value="Arts">Arts</option>
-                            <option value="Festivals">Festivals</option>
-                            <option value="Theatre">Theatre</option>
-                          </select>
-                    
-                    </div>
+
                     <div class="form-group">
                         <input type="text" class="form-control" name="venue" placeholder="Event Venue *"/>
                     </div>
+
+                    <div class="form-group">
+                      <input type="text" class="form-control" name="postcode" placeholder="Postcode of Venue *"/>
+                  </div>
                 </div>
 
                 <div class="col-md-6">
@@ -101,7 +95,17 @@
 
 
             </div>
-      
+            <div class="form-group">
+                       
+              <select class = "form-control" name="type" id="event_types">
+                  <option value="">Select Event Types *</option>
+                  <option value="Sports">Sports</option>
+                  <option value="Arts">Arts</option>
+                  <option value="Festivals">Festivals</option>
+                  <option value="Theatre">Theatre</option>
+                </select>
+          
+          </div>
             </div>
             <button class="btnSubmit" type="submit">Create!</button>
           </form>

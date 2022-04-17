@@ -16,7 +16,7 @@ from register import check_username_exists
 from review import edit_review, get_reviews_alt, post_review, get_review, reply_review
 from login import check_account_credentials
 from create_event import post_event_details, check_event_details
-from search import search_title_and_description,filter_event_types,search_all
+from search import search_title_and_description,search_by_location
 
 from reset_password import confirm_user_detail, confirm_password, check_username_not_exists
 
@@ -197,6 +197,7 @@ def create_event():
             "end_date": request.form['end_date'],
             "tickets_available": request.form['tickets_available'],
             "ticket_price": request.form['ticket_price'],
+            "postcode": request.form['postcode'],
             "host": user,
         }
 
@@ -245,15 +246,22 @@ def search():
     if session_token is None:
         user = ""
     else:
-        session_alive = True
         user = session_token_to_user(session_token)
 
     if request.method == "POST":
         search_input = request.form['search']
         events_data = search_title_and_description(search_input)
 
-        if session_alive:
+        # First searches by title,description or event type...then searches by suburb/postcode
+        print(events_data)
+        if len(events_data) == 0:
+            events_data = search_by_location(search_input)
+
+
+        if session_token is None:
             return render_template("logged_in_home.html",data=events_data)
+        else:
+            return render_template("home.html",data=events_data)
 
     else:
         return render_template("home.html")
@@ -265,16 +273,15 @@ def search_type(Type):
     if session_token is None:
         user = ""
     else:
-        session_alive = True 
         user = session_token_to_user(session_token)
 
     search_input = Type
     events_data = search_title_and_description(search_input)
 
-    if session_alive:
-        return render_template("logged_in_home.html",data=events_data)
-    else:
+    if session_token is None:
         return render_template("home.html",data=events_data)
+    else:
+        return render_template("logged_in_home.html",data=events_data)
 
 
 
