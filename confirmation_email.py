@@ -4,6 +4,7 @@ gmail_user = 'eventunsw@gmail.com'
 gmail_password = 'eventunswpass'
 
 def confirm_booking(sendee,event):
+ 
     sent_from = gmail_user
     to = sendee
     subject = 'Confirmation Booking'
