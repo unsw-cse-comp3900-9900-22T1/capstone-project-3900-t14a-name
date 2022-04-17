@@ -17,9 +17,6 @@ from review import edit_review, get_reviews_alt, post_review, get_review, reply_
 from login import check_account_credentials
 from create_event import post_event_details, check_event_details
 from search import search_title_and_description,search_by_location
-
-from reset_password import confirm_user_detail, confirm_password, check_username_not_exists
-
 from password import check_password_strength
 
 
@@ -72,13 +69,13 @@ def register():
         phone_number = request.form['phone']
 
         if check_username_exists(username): # If username already exists, fail registration
-            return redirect(url_for("register"))
+            return render_template("RegisterFailed.html")
 
         if check_password_strength(password): # If password is too weak, fail registration
-            return redirect(url_for("register"))
+            return render_template("RegisterFailed.html")
 
         if password != confirm_password: # type/copypaste passwords correctly please
-            return redirect(url_for("register"))
+            return render_template("RegisterFailed.html")
 
         else: # Otherwise, It proceeds to the login page
             salt = secrets.token_urlsafe(64)
@@ -108,39 +105,10 @@ def login():
             response.set_cookie("session-token", token_id, 604800, valid_until)
             return response
         else:
-            return redirect(url_for("login"))
+            return render_template("LoginFailed.html")
 
     else:
         return render_template("login.html")
-
-@app.route('/reset_password', methods = ["POST","GET"])
-def reset_password():
-
-    if request.method == "POST":
-        username = request.form['username']
-        register_email = request.form['email']
-
-        if check_username_not_exists(username):
-            return redirect(url_for("reset_password"))
-
-        if confirm_user_detail(username, register_email):
-            new_password = request.form['new_password']
-            confirm_new_password = request.form['confirm_newpassword']
-
-            if confirm_password(new_password, confirm_new_password):
-                salt = secrets.token_urlsafe(64)
-                password = hashlib.pbkdf2_hmac(
-                    'sha256', 
-                    bytes(request.form['new_password'],'utf-8'), 
-                    bytes(salt,'utf-8'),
-                    100000
-                ).hex()    
-                post_account_details(username,salt,password,register_email)####
-                return redirect(url_for("login"))
-            else: 
-                return redirect(url_for("reset_password"))
-    else:
-        return render_template("reset_password.html")
 
 @app.route('/logout', methods=["POST","GET"])
 def logout():
