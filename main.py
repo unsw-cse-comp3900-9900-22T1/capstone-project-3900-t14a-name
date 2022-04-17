@@ -604,6 +604,27 @@ def list_event(Event_Title):
         data = get_dynamodb_item("event_details",Event_Title)
         return json.dumps(data['List of Attendees'])  
     
+
+@app.route('/event_info/<Event_Title>/cancel', methods = ["GET","POST"])
+def user_cancel(Event_Title):
     
+    session_token = get_session_token(request)
+    if session_token is None:
+        user = ""
+        return redirect(url_for("login"))
+    else:
+        user = session_token_to_user(session_token)
+    
+    user_data = get_dynamodb_item_user(user)
+    event_data =  get_dynamodb_item("event_details",Event_Title)
+    event_data['List of Attendees'].remove(user_data['Username'])
+    user_data['List of Events'].remove(Event_Title)
+    update_event("event_details",event_data)
+    update_event("account_details",user_data)
+
+   
+    return render_template("cancellation.html")
+
+
 if __name__ == "__main__":
     app.run(debug=True, port=3500)

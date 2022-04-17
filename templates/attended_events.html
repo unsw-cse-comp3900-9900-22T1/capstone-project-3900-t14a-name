@@ -17,6 +17,11 @@
                     <input class="btnSubmit" type="submit" value="Book Tickets"></input>
                 </form>
                 
+                
+                <form method="POST" action="/event_info/{{item["Event Title"]}}/cancel">  
+                    <input class="btnSubmit" type="submit" value="Cancel"></input>
+                </form>
+
                 <br>
                 <text>{{item["Description"]}}</text>
                 <br><br><br>
