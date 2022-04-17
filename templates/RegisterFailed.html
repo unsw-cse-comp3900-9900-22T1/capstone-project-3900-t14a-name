@@ -34,42 +34,13 @@
       text-align: center;
     }
 
-    .tooltip {
-  position: relative;
-  display: inline-block;
-  border-bottom: 1px dotted black;
-}
-
-.tooltip .tooltiptext {
-  visibility: hidden;
-  width: 12px;
-  background-color: black;
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 5px 0;
-  position: absolute;
-  z-index: 1;
-  bottom: 100%;
-  left: 50%;
-  margin-left: -60px;
-  
-  /* Fade in tooltip - takes 1 second to go from 0% to 100% opac: */
-  opacity: 0;
-  transition: opacity 1s;
-}
-
-.tooltip:hover .tooltiptext {
-  visibility: visible;
-  opacity: 1;
-}
-    
   </style>
 </head>
-<div class="container register-form">
+<div class="container reset_password-form">
   <div class="form">
     <div class="note">
-      <p>Please register below</p>
+    
+      <p>Register Failed</p>
       <img class="mb-5" src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/c0840e59-db43-4681-ae7b-31a04dc4bc55/d7eqdvw-4e97ac92-e4b9-4498-9655-e4d612eb478b.png/v1/fill/w_1192,h_670,strp/random_logo_by_criticl_d7eqdvw-pre.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9OTAwIiwicGF0aCI6IlwvZlwvYzA4NDBlNTktZGI0My00NjgxLWFlN2ItMzFhMDRkYzRiYzU1XC9kN2VxZHZ3LTRlOTdhYzkyLWU0YjktNDQ5OC05NjU1LWU0ZDYxMmViNDc4Yi5wbmciLCJ3aWR0aCI6Ijw9MTYwMCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.X991O1jF5lTNZbbEoHEfoo6nlHEihBMHMIm5-uBCXcU" alt="" width="92" height="70">
    
     </div>
@@ -80,47 +51,28 @@
 
   <div class="form-content">
     <form action="#" method="post">
-      <div class="row">
-
-          <div class="col-md-6">
-              <div class="form-group">
-                  <input type="text" class="form-control" name="username" placeholder="Username *"/>
-              </div>
-              <div class="form-group">
-                  
-                  <input type="text" class="form-control" name="password" placeholder="Your Password"/>
-              </div>
-          </div>
-
-          <div class="col-md-6">
-              <div class="form-group">
-                <input type="text" class="form-control" name="fullname" placeholder="Full Name *"/>
-              </div>
-              <div class="form-group">
-                  <input type="text" class="form-control" name="confirm_password" placeholder="Confirm Password *"/>
-              </div>
-          </div>
-
-          <div class="col-md-6">
-            <div class="form-group">
-                <input type="text" class="form-control" name="email" placeholder="Your Email *"/>
-            </div>
-            <div class="form-group">
+        <div class="note"> 
+           <p>Register Failed. May caused by following issues</p> 
+        </div>
+        <div class="row">
+            <div class="col-md-6">
                 
-            </div>
-        </div>
-
-        <div class="col-md-6">
-          <div class="form-group">
-            <input type="text" class="form-control" name="phone" placeholder="Your Phone Number *"/>
+                <l>1. Username is already taken<br>
+                2. Password length needs to be more than 8 characters<br>
+                3. Password should not contain special character such as "@,#,$,%,^,&,*"</l>
           </div>
+        </div>
 
-        </div>
-        
-    
-        </div>
+
       </div>
-      <button class="btnSubmit" type="submit">Submit</button>
+
+      <style>
+        p{text-align: center;}
+        l{text-align: left;}
+        
+    </style>
+      <a href="login"><p>Login</p></a>
+      <a href="register"><p>Register again</p></a>
     </form>
     
     
