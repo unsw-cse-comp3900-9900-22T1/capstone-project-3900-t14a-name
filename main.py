@@ -197,6 +197,7 @@ def create_event():
             "end_date": request.form['end_date'],
             "tickets_available": request.form['tickets_available'],
             "ticket_price": request.form['ticket_price'],
+            "postcode": request.form['postcode'],
             "host": user,
         }
 
@@ -245,15 +246,16 @@ def search():
     if session_token is None:
         user = ""
     else:
-        session_alive = True
         user = session_token_to_user(session_token)
 
     if request.method == "POST":
         search_input = request.form['search']
         events_data = search_title_and_description(search_input)
 
-        if session_alive:
+        if session_token is None:
             return render_template("logged_in_home.html",data=events_data)
+        else:
+            return render_template("home.html",data=events_data)
 
     else:
         return render_template("home.html")
@@ -265,16 +267,15 @@ def search_type(Type):
     if session_token is None:
         user = ""
     else:
-        session_alive = True 
         user = session_token_to_user(session_token)
 
     search_input = Type
     events_data = search_title_and_description(search_input)
 
-    if session_alive:
-        return render_template("logged_in_home.html",data=events_data)
-    else:
+    if session_token is None:
         return render_template("home.html",data=events_data)
+    else:
+        return render_template("logged_in_home.html",data=events_data)
 
 
 
