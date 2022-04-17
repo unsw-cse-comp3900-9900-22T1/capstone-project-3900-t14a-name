@@ -483,7 +483,7 @@ def pay_event(Event_Title):
                     user_data['List of Events'].append(Event_Title)
                     update_event("event_details",data)
                     update_event("account_details",user_data)
-                  
+                    #print('User Email: ' + user_data['Email'] + ',Event: ' + Event_Title)
                     confirm_booking(user_data['Email'],Event_Title)
             
         finally:
@@ -627,7 +627,7 @@ def user_cancel(Event_Title):
     return render_template("cancellation.html")
 
 @app.route('/confirm_booking', methods = ["GET","POST"])
-def confirm_booking():
+def confirmation():
     return render_template('confirmation.html')
 
 
