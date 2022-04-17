@@ -25,3 +25,4 @@ Week8
 Complete retro with team members and hand to scrum master, finalise the tasks on for the last sprint, working on the last sprint, started final report.
 
 Week9
+Add new small changes to the frontend, clean up the code and continue working on the final report
