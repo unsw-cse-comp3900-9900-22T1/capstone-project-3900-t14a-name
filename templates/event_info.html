@@ -103,8 +103,9 @@
         <div class = "Box4">
             <div class = "Text_Box">
                 <h2>{{data["Event Title"]}}</h2>
-                <h3>{{data["Start Date"]}}</h3>
+                <h3>{{data["Start Date"]}} - {{data["End Date"]}}</h3>
                 <h4>Tickets Available: {{data["Tickets Available"]}}</h4>
+                <h4>Tickets Price: {{data["Ticket Price"]}}</h4>
                 <form method="POST" action="/event_info/{{data["Event Title"]}}/book_ticket">  
                     <input class="btnSubmit" type="submit" value="Book Tickets"></input>
                 </form>
@@ -112,6 +113,8 @@
                 <text>{{data["Description"]}}</text>
                 <br><br><br><br><br><br>
                 <h3>Location: {{data["Venue"]}}</h3>
+                <h3>Postcode: {{data["Postcode"]}}</h3>
+                <h3>Host: {{data["Host"]}}</h3>
             </div>
         </div>
 
@@ -122,15 +125,15 @@
                 <div class = "Box3">
                     <div class = "Text_Box">
                         <h2>{{item["Event Title"]}}</h2>
-                        <h3>{{data["Start Date"]}}</h3>
-                        <h4>Tickets Available: {{data["Tickets Available"]}}</h4>
-                        <form method="POST" action="/event_info/{{data["Event Title"]}}/book_ticket">  
+                        <h3>{{item["Start Date"]}}</h3>
+                        <h4>Tickets Available: {{item["Tickets Available"]}}</h4>
+                        <form method="POST" action="/event_info/{{item["Event Title"]}}">  
                             <input class="btnSubmit" type="submit" value="Book Tickets"></input>
                         </form>
                         <br>
-                        <text>{{data["Description"]}}</text>
+                        <text>{{item["Description"]}}</text>
                         <br><br><br><br><br><br>
-                        <h3>Location: {{data["Venue"]}}</h3>
+                        <h3>Location: {{item["Venue"]}}</h3>
                     </div>
                 </div>
             {% endfor %}
