@@ -70,7 +70,8 @@ def update_event_to_dynamoDB(item):
             'Seats':item['Seats'],
             'Host': item['Host'],
             'List of Attendees': item['List of Attendees'],
-            'End Date': item['End Date']
+            'End Date': item['End Date'],
+            'Type': item['Type'],
         }
     )
 
