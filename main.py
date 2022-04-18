@@ -482,17 +482,17 @@ def pay_event(Event_Title):
 @app.route('/<Event_Title>/cancel',methods = ["GET"])
 def cancel_event(Event_Title):
     
-    if request.method == "GET":
-        data = get_dynamodb_item("event_details",Event_Title)
-        for user in data['List of Attendees']:
-            userdata = get_dynamodb_item_user(user)
-            cancellation(userdata['Email'],Event_Title)
-            userdata['List of Events'].remove(Event_Title)
-            update_event("account_details",userdata)
+ 
+    data = get_dynamodb_item("event_details",Event_Title)
+    for user in data['List of Attendees']:
+        userdata = get_dynamodb_item_user(user)
+        cancellation(userdata['Email'],Event_Title)
+        userdata['List of Events'].remove(Event_Title)
+        update_event("account_details",userdata)
             
     delete_event(Event_Title)
     
-    return json.dumps(userdata)  
+    return render_template('cancellation.html') 
         #return json.dumps(data['List of Attendees'])
 
 
