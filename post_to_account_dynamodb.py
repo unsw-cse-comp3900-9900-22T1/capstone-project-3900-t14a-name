@@ -53,3 +53,25 @@ def update_account_to_dynamoDB(item):
         }
     )
 
+def update_event_to_dynamoDB(item):
+    
+    dynamodb = boto3.resource('dynamodb',region_name='ap-southeast-2',aws_access_key_id='AKIAQPNE33YVPQHU7F64',aws_secret_access_key='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')
+    table = dynamodb.Table('event_details')
+
+    table.put_item(
+        Item={
+            'Event Title':item['Event Title'],
+            'Start Date':item['Start Date'],
+            'Postcode':item['Postcode'],
+            'Description':item['Description'],
+            'Ticket Price': item['Ticket Price'],
+            'Venue': item['Venue'],
+            'Tickets Available': str(item['Tickets Available']),
+            'Seats':item['Seats'],
+            'Host': item['Host'],
+            'List of Attendees': item['List of Attendees'],
+            'End Date': item['End Date']
+        }
+    )
+
+        

@@ -11,7 +11,7 @@ from flask import render_template, request, redirect, url_for, Flask, make_respo
 from auth import generate_token, get_session_token, remove_token, session_token_to_user
 from get_dynamodb import get_dynamodb, get_dynamodb_item, update_event, get_dynamodb_item_user
 
-from post_to_account_dynamodb import post_account_details, update_account_to_dynamoDB
+from post_to_account_dynamodb import post_account_details, update_account_to_dynamoDB,update_event_to_dynamoDB
 from register import check_username_exists
 from review import edit_review, get_reviews_alt, post_review, get_review, reply_review
 from login import check_account_credentials
@@ -221,7 +221,6 @@ def search():
         events_data = search_title_and_description(search_input)
 
         # First searches by title,description or event type...then searches by suburb/postcode
-        print(events_data)
         if len(events_data) == 0:
             events_data = search_by_location(search_input)
 
@@ -417,6 +416,23 @@ def book_event(Event_Title):
     event = get_dynamodb_item("event_details",Event_Title)
     
     if request.method == "POST":
+        
+        # Decreases the number of available tickets
+        if int(event['Tickets Available']) <= 0:
+            event['Tickets Available'] = "SOLD OUT"
+            update_event_to_dynamoDB(event)
+            return redirect(url_for("login"))
+
+            
+        try:
+            tickets_available = event['Tickets Available']
+            tickets_available = int(tickets_available)
+            remaining_tickets = tickets_available - 1
+            event['Tickets Available'] = remaining_tickets
+            update_event_to_dynamoDB(event)
+        except:
+            pass
+
         print(request.form.getlist('seat'))
         return render_template("book_event.html")      
     
@@ -429,7 +445,8 @@ def book_event(Event_Title):
 def pay_event(Event_Title):
     data = get_dynamodb_item("event_details",Event_Title)
     
-    if request.method == "POST":     
+    if request.method == "POST":
+
         try:
             checkout = {
                 "payment": request.form.get('payment'),
