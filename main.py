@@ -12,12 +12,11 @@ from auth import generate_token, get_session_token, remove_token, session_token_
 from get_dynamodb import get_dynamodb, get_dynamodb_item, update_event, get_dynamodb_item_user
 
 from post_to_account_dynamodb import post_account_details, update_account_to_dynamoDB,update_event_to_dynamoDB
-from register import check_username_exists
+from register import do_registration_checks
 from review import edit_review, get_reviews_alt, post_review, get_review, reply_review
 from login import check_account_credentials
 from create_event import post_event_details, check_event_details
 from search import search_title_and_description,search_by_location
-from password import check_password_strength
 
 
 
@@ -66,15 +65,9 @@ def register():
         fullname = request.form['fullname']
         confirm_password = request.form['confirm_password']
         email = request.form['email']
-        phone_number = request.form['phone']
+        phone = request.form['phone']
 
-        if check_username_exists(username): # If username already exists, fail registration
-            return render_template("RegisterFailed.html")
-
-        if check_password_strength(password): # If password is too weak, fail registration
-            return render_template("RegisterFailed.html")
-
-        if password != confirm_password: # type/copypaste passwords correctly please
+        if not do_registration_checks(username, password, fullname, confirm_password, email, phone):
             return render_template("RegisterFailed.html")
 
         else: # Otherwise, It proceeds to the login page
@@ -86,7 +79,7 @@ def register():
                 100000
             ).hex()
 
-            post_account_details(username,salt,password,email)
+            post_account_details(username,salt,password,email,fullname,phone)
             return redirect(url_for("login"))
 
     else:
@@ -172,9 +165,8 @@ def create_event():
         # event_id += 1
         event_info['list_attendees'] = []
         
-        if check_event_details(event_info):
-            pass
-
+        if not check_event_details(event_info):
+            return render_template("CreateEventFailed.html")
         else:
             post_event_details(event_info)
             #event = create_seatsio_event()

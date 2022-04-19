@@ -5,5 +5,5 @@ returns true if password too weak
 """
 def check_password_strength(password):
     if len(password) < 10 or password in worst_passwords:
-        return True
-    return False
+        return False
+    return True
