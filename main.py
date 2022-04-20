@@ -603,10 +603,13 @@ def user_cancel(Event_Title):
    
     return render_template("cancellation.html")
 
-@app.route('/confirm_booking', methods = ["GET","POST"])
-def confirmation():
-    return render_template('confirmation.html')
+@app.route('/about', methods = ["GET","POST"])
+def about():
+    return render_template('about.html')
 
+@app.route('/help', methods = ["GET","POST"])
+def help():
+    return render_template('help.html')
 
 if __name__ == "__main__":
     app.run(debug=True, port=3500)
