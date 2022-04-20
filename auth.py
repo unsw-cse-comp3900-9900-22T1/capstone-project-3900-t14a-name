@@ -4,7 +4,6 @@ from re import S
 from flask import render_template, request, redirect, url_for, Flask, session
 from get_dynamodb import get_dynamodb
 from post_to_account_dynamodb import post_account_details
-from register import check_username_exists
 from login import check_account_credentials
 from create_event import post_event_details, check_event_details
 import secrets
