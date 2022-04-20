@@ -605,7 +605,7 @@ def user_cancel(Event_Title):
 
 @app.route('/confirm_booking', methods = ["GET","POST"])
 def confirmation():
-    return render_template('about.html')
+    return render_template('confirmation.html')
 
 @app.route('/about', methods = ["GET","POST"])
 def about():
