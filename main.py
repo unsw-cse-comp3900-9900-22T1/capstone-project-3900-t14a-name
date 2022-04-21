@@ -53,7 +53,6 @@ def home():
         return render_template("logged_in_home.html",data=events_data,username=username)
     else:
         return render_template("home.html",data=events_data,username=username)
-    # return events_data
 
 
 @app.route('/register', methods=["POST","GET"])
@@ -115,37 +114,15 @@ def logout():
     response.set_cookie("session-token", "", expires=0)
     return response
 
-
-@app.route('/get_account_details', methods=["GET"])
-def get_account_details():
-    # session_token = get_session_token(request)
-    # if session_token is None:
-    #     return redirect(url_for("login"))
-
-    if request.method == "GET":
-
-        data = get_dynamodb("account_details")
-        return data
-
-
-@app.route('/get_event_details', methods=["GET"])
-def get_event_details():
-#     session_token = get_session_token(request)
-#     if session_token is None:
-#         return redirect(url_for("login"))
-
-    if request.method == "GET":
-
-        data = get_dynamodb("event_details")
-        return data
-
     
 @app.route('/create_event', methods=["POST","GET"])
 def create_event():
+
     session_token = get_session_token(request)
     if session_token is None:
         return redirect(url_for("login"))
     user = session_token_to_user(session_token)
+
     if request.method == "POST":
 
         event_info = {
@@ -162,25 +139,21 @@ def create_event():
             "host": user,
         }
 
-        # event_id += 1
         event_info['list_attendees'] = []
         
-        if not check_event_details(event_info):
+        if not check_event_details(event_info): # If event details already posted or don't match specifications
             return render_template("CreateEventFailed.html")
         else:
             post_event_details(event_info)
-            #event = create_seatsio_event()
-            #print("Event: \n")
-            #print(event)
             return redirect(url_for("home"))
 
     else:
-        #chart_key = create_chart()
         return render_template("create_event.html")
 
 
 @app.route('/event_info/<Event_Title>', methods=["POST","GET"])
 def event_info(Event_Title):
+
     session_token = get_session_token(request)
     if session_token is None:
         user = ""
@@ -235,55 +208,12 @@ def search_type(Type):
         user = session_token_to_user(session_token)
 
     search_input = Type
-    events_data = search_title_and_description(search_input)
+    events_data = search_title_and_description(search_input) # Searches by type using title and description function
 
     if session_token is None:
         return render_template("home.html",data=events_data)
     else:
         return render_template("logged_in_home.html",data=events_data)
-
-
-
-'''
-@app.route('/event_info/<Event_Title>/book_ticket', methods = ["POST","GET"])
-def book_ticket(Event_Title):
-    print("event = " + Event_Title)
-    data = get_dynamodb_item("event_details",Event_Title)
-    
-    if request.method == "POST":
-        
-        try:
-            checkout = {
-                "payment": request.form.get('payment'),
-                "cardholder": request.form.get('cardholder'),
-                "date": request.form.get('date'),
-                "verification": request.form.get('verification'),
-                "cardnumber":request.form.get('cardnumber')
-            }
-            
-            if checkout is not None:
-                session_token = get_session_token(request)
-                if session_token is None:
-                    user = ""
-                else:
-                    user = session_token_to_user(session_token)
-                    data['List of Attendees'].append(checkout['cardholder'])
-                    user_data = get_dynamodb_item_user(user)
-                    user_data['List of Events'].append(Event_Title)
-                    update_event("event_details",data)
-                    update_event("account_details",user_data)
-            
-        finally:
-            
-            
-            data['List of Attendees'].append("Ricky")
-            update_event("event_details",data)
-            
-            return render_template("booking.html" )
-            
-    else:
-        return render_template("booking.html")
-'''
 
 @app.route('/leave_review/<event_name>', methods = ["POST"])
 def leave_review(event_name):
@@ -293,7 +223,7 @@ def leave_review(event_name):
 
     if request.method == "POST":
         review = request.form['review_text']
-        post_review(session_token, event_name, review)
+        post_review(session_token, event_name, review) # Gets the review text and posts it to dynamodb
 
     return redirect("/event_info/" + event_name)
 
@@ -312,7 +242,7 @@ def edit_review_route(event_name):
 
     if request.method == "POST":
         new_review = request.form['new_review']
-        edit_review(session_token, event_name, user, new_review)
+        edit_review(session_token, event_name, user, new_review) # Posts the edited review text
 
     return redirect("/event_info/" + event_name)
 
@@ -330,14 +260,9 @@ def reply_review_route(event_name, username):
 
     if request.method == "POST":
         reply = request.form['reply_text']
-        reply_review(session_token, event_name, username, reply)
+        reply_review(session_token, event_name, username, reply) # Posts reply to dyanmodb
         
     return redirect("/event_info/" + event_name)
-  
-# Booking page place holder       
-@app.route('/book_trial', methods = ["POST","GET"])
-def book_trial():
-    return render_template("booking.html")
 
 @app.route('/add_to_favourites/<favourite_event>',methods = ["POST","GET"])
 def add_to_favourites(favourite_event):
@@ -388,13 +313,14 @@ def favourites_list():
         user = session_token_to_user(session_token)
 
     user_data = get_dynamodb_item_user(user)
-    user_favourites_list_titles = user_data['Favourites List']
+    user_favourites_list_titles = user_data['Favourites List'] # Gets the favourites list
     events_data = get_dynamodb("event_details")
     events_data = json.loads(events_data) # Converts it back to JSON so that html can format it properly
     user_favourites_list_data = []
 
     for event in events_data:
 
+        # If event title is in the favourites list, then event info is saved
         if event['Event Title'] in user_favourites_list_titles:
             user_favourites_list_data.append(event)
     
@@ -417,6 +343,7 @@ def book_event(Event_Title):
 
             
         try:
+            # Subtracts the total amount of tickets by 1
             tickets_available = event['Tickets Available']
             tickets_available = int(tickets_available)
             remaining_tickets = tickets_available - 1
@@ -425,7 +352,6 @@ def book_event(Event_Title):
         except:
             pass
 
-        print(request.form.getlist('seat'))
         return render_template("book_event.html")      
     
     elif request.method == "GET":
@@ -454,13 +380,11 @@ def pay_event(Event_Title):
                     user = ""
                 else:
                     user = session_token_to_user(session_token)
-                    #data['List of Attendees'].append(checkout['cardholder'])
                     user_data = get_dynamodb_item_user(user)
                     data['List of Attendees'].append(user_data['Username'])
                     user_data['List of Events'].append(Event_Title)
                     update_event("event_details",data)
                     update_event("account_details",user_data)
-                    #print('User Email: ' + user_data['Email'] + ',Event: ' + Event_Title)
                     confirm_booking(user_data['Email'],Event_Title)
             
         finally:
@@ -474,7 +398,6 @@ def pay_event(Event_Title):
 @app.route('/<Event_Title>/cancel',methods = ["GET"])
 def cancel_event(Event_Title):
     
- 
     data = get_dynamodb_item("event_details",Event_Title)
     for user in data['List of Attendees']:
         userdata = get_dynamodb_item_user(user)
@@ -485,7 +408,6 @@ def cancel_event(Event_Title):
     delete_event(Event_Title)
     
     return render_template('cancellation.html') 
-        #return json.dumps(data['List of Attendees'])
 
 
 @app.route('/recommendations', methods = ["POST","GET"])
@@ -593,6 +515,7 @@ def user_cancel(Event_Title):
     else:
         user = session_token_to_user(session_token)
     
+    # Cancels the event and removes it from the corresponding databases
     user_data = get_dynamodb_item_user(user)
     event_data =  get_dynamodb_item("event_details",Event_Title)
     event_data['List of Attendees'].remove(user_data['Username'])
